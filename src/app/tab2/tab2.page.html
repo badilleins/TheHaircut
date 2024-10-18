@@ -1,0 +1,30 @@
+<app-header  title="PRODUCTOS"></app-header>
+<ion-toolbar >
+  <ion-segment [(ngModel)]="selectedSegment">
+    <ion-segment-button value="haircuts">
+      <ion-label>Cortes</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="products">
+      <ion-label>Productos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
+
+<ion-content>
+  <ion-toolbar>
+    <ng-container *ngIf="selectedSegment === 'haircuts'">
+      
+      <app-haircut-gallery></app-haircut-gallery>
+    </ng-container>
+    <ng-container *ngIf="selectedSegment === 'products'">
+      <app-products></app-products>
+    </ng-container>
+  </ion-toolbar>
+
+  <!-- Botón para cargar formulario modal -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="user().isAdmin">
+    <ion-fab-button (click)="add()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

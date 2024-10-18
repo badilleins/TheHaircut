@@ -1,0 +1,22 @@
+/* Estilos en el archivo de estilos de la página (por ejemplo, barbers.page.scss) */
+.center-title {
+  text-align: center;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.center-avatar {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; /* Ajusta el espacio según sea necesario */
+}
+
+.center-name {
+  text-align: center;
+  width: 100%;
+}
+.notifications{
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 60px;
+}

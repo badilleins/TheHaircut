@@ -1,0 +1,78 @@
+<app-header 
+  [isModal]="true" 
+  [title]="user ? 'Actualizar Barbero' : 'Agregar Barbero'"></app-header>
+
+<ion-content [fullscreen]="true">
+  <div class="d-flex-center">
+    <form 
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()">
+
+      <ion-avatar *ngIf="form.value.image">
+        <img [src]="form.value.image" />
+      </ion-avatar>
+      <!-- Si existe o no imagen -->
+      <ion-icon class="image-icon" *ngIf="!form.value.image" name="image-outline"></ion-icon>
+      <br>
+      <!-- botón para tomar imagen -->
+      <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
+        Tomar/Seleccionar
+      </ion-button>
+
+      <!-- Caja de texto para el nombre -->
+      <app-custom-input
+        autocomplete="name"
+        [control]="form.controls.name"
+        type="text"
+        label="Nombre">
+      </app-custom-input>
+      <div 
+        class="validators" 
+        *ngIf="form.controls.name.errors && form.controls.name.touched">
+        <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
+        <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
+      </div> 
+
+      <!-- Caja de texto para el apellido -->
+      <app-custom-input
+        autocomplete="name"
+        [control]="form.controls.lastName"
+        type="text"
+        label="Apellido">
+      </app-custom-input>
+      <div 
+        class="validators" 
+        *ngIf="form.controls.lastName.errors && form.controls.lastName.touched">
+        <div *ngIf="form.controls.lastName.errors?.['required']">El apellido es requerido</div>
+        <div *ngIf="form.controls.lastName.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
+      </div>
+      <!-- <ion-datetime presentation="time" [preferWheel]="true">
+        <ion-buttons slot="buttons">
+            <ion-button color="danger">Cancelar</ion-button>
+            <ion-button color="success">Aceptar</ion-button>
+        </ion-buttons>
+      </ion-datetime> -->
+      <app-custom-input
+        [isTimePicker]="true"
+        [control]="form.controls.hourStartAt"
+        label="Hora de inicio">
+      </app-custom-input>
+      <div 
+        class="validators" 
+        *ngIf="form.controls.hourStartAt.errors && form.controls.hourStartAt.touched">
+        <div *ngIf="form.controls.hourStartAt.errors?.['required']">La hora de inicio es requerida</div>
+      </div>
+      <!-- Botón para registrar o actualizar -->
+      <ion-button 
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        {{user ? 'Actualizar Barbero' : 'Agregar Barbero'}}
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button> 
+    </form>
+  </div>
+</ion-content>

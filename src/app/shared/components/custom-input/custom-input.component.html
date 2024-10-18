@@ -1,0 +1,54 @@
+<ion-item lines="none" class="custom-input">
+  <ion-icon 
+    color="primary" 
+    *ngIf="icon"
+    slot="start"
+    [name]="icon">
+  </ion-icon>
+  <ion-input 
+  *ngIf="isTimePicker"
+    type="number"
+    [label]="label"
+    [formControl]="control"
+    labelPlacement="floating"
+    readonly
+    (click)="openTimePicker()"
+    [value]="selectedTime"
+    placeholder="Selecciona una hora"
+    labelPlacement="floating">
+  </ion-input>
+  <ion-input 
+    *ngIf="!isTimePicker"
+    [type]="type"
+    [label]="label"
+    [autocomplete]="autocomplete"
+    [formControl]="control"
+    labelPlacement="floating">
+  </ion-input>
+  <ion-button 
+    *ngIf="isPassword"
+    (click)="showOrHidePassword()" 
+    expand="block" 
+    fill="clear" 
+    shape="round"
+    slot="end">
+    <ion-icon 
+      slot="icon-only" 
+      [name]="hide? 'eye-outline' : 'eye-off-outline'">
+    </ion-icon>
+  </ion-button>
+</ion-item>
+
+<ion-modal [isOpen]="showDateTime" (didDismiss)="closeTimePicker()">
+  <ng-template>
+    <ion-datetime 
+      presentation="time"
+      (onchange)="onTimeSelected($event)">
+      <span slot="title">Seleccione la hora de inicio</span>
+      <ion-buttons slot="buttons">
+        <ion-button color="danger" (click)="closeTimePicker()">Cancelar</ion-button>
+        <ion-button color="success" (click)="acceptTime()">Aceptar</ion-button>
+      </ion-buttons>
+    </ion-datetime>
+  </ng-template>
+</ion-modal>

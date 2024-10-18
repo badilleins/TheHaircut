@@ -1,0 +1,76 @@
+<app-header 
+  [isModal]="true" 
+  [title]="appointment.id ? 'Actualizar Cita' : 'Agregar Cita'"></app-header>
+
+<ion-content [fullscreen]="true">
+  <div class="d-flex-center">
+    <form 
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()">
+
+      <!-- Caja de texto para el nombre -->
+
+      <app-custom-input
+        autocomplete="name"
+        [control]="form.controls.name"
+        type="text"
+        label="Nombre">
+      </app-custom-input>
+      <div 
+        class="validators" 
+        *ngIf="form.controls.name.errors && form.controls.name.touched">
+        <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
+        <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
+      </div>   
+      <app-custom-input
+        autocomplete="name"
+        [control]="form.controls.lastName"
+        type="text"
+        label="Apellido">
+      </app-custom-input>
+      <div 
+        class="validators" 
+        *ngIf="form.controls.lastName.errors && form.controls.lastName.touched">
+        <div *ngIf="form.controls.lastName.errors?.['required']">El apellido es requerido</div>
+        <div *ngIf="form.controls.lastName.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
+      </div>   
+
+      <app-custom-input
+        autocomplete="name"
+        [control]="form.controls.date"
+        type="text"
+        label="Fecha">
+      </app-custom-input>
+
+      <div 
+        class="validators" 
+        *ngIf="form.controls.date.errors && form.controls.date.touched">
+        <div *ngIf="form.controls.date.errors?.['required']">La fecha es requerida</div>
+        <div *ngIf="form.controls.date.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
+      </div>   
+      <app-custom-input
+        [control]="form.controls.price"
+        type="number"
+        label="Precio">
+      </app-custom-input>
+      <div 
+        class="validators" 
+        *ngIf="form.controls.price.errors && form.controls.price.touched">
+        <div *ngIf="form.controls.price.errors?.['required']">El precio es requerido</div>
+        <div *ngIf="form.controls.price.errors?.['min']">El precio mínimo debe ser cero</div>
+      </div>
+
+      <!-- Botón para registrar o actualizar -->
+      <ion-button 
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        {{appointment.id ? 'Actualizar Cita' : 'Agregar Cita'}}
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button> 
+    </form>
+  </div>
+</ion-content>

@@ -1,0 +1,24 @@
+ion-item ion-card{
+    width: 100%;
+}
+
+.responsive-image {
+    width: 100%;
+    height: 250px; /* Puedes ajustar este valor según el diseño */
+    object-fit: cover; /* Esto asegura que la imagen mantenga su proporción */
+}
+
+.responsive-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.button-wrapper {
+    margin-top: auto; /* Empuja el contenido hacia arriba y deja los botones al final del card */
+  }
+
+ion-grid{
+    margin-bottom: 54px;
+}

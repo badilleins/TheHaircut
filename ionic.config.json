@@ -1,0 +1,7 @@
+{
+  "name": "Citas Barber",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

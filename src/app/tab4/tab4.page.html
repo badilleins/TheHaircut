@@ -1,0 +1,40 @@
+<app-header title="Notificaciones"></app-header>
+
+<ion-content>
+  <ion-card>
+    <ion-title class="center-title">Notificaciones</ion-title>
+    <div class="center-avatar">
+      <ion-avatar>
+        <img [src]="user().image" alt="Avatar">
+      </ion-avatar>
+    </div>
+    <ion-item lines="none">
+      <ion-label>
+        <h1 class="center-name">{{user().name}}</h1>
+      </ion-label>
+    </ion-item>
+
+    <ion-list inset="true" class="notifications" mode="ios">
+      <ion-item [button]="true">
+        <ion-icon color="danger" slot="start" name="list-circle" size="large"></ion-icon>
+        <ion-label>Corte de cabello pendiente</ion-label>
+        <ion-note slot="end">6</ion-note>
+      </ion-item>
+      <ion-item [button]="true">
+        <ion-icon color="tertiary" slot="start" name="list-circle" size="large"></ion-icon>
+        <ion-label>Corte de cabello cancelado</ion-label>
+        <ion-note slot="end">15</ion-note>
+      </ion-item>
+      <ion-item [button]="true">
+        <ion-icon color="success" slot="start" name="list-circle" size="large"></ion-icon>
+        <ion-label>Corte de cabello cancelado</ion-label>
+        <ion-note slot="end">3</ion-note>
+      </ion-item>
+      <ion-item [button]="true">
+        <ion-icon color="warning" slot="start" name="list-circle" size="large"></ion-icon>
+        <ion-label>Corte de cabello pendiente</ion-label>
+        <ion-note slot="end">8</ion-note>
+      </ion-item>
+    </ion-list>
+  </ion-card>
+</ion-content>

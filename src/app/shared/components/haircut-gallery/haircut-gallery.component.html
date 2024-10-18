@@ -1,0 +1,58 @@
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterHaircuts()" placeholder="Buscar cortes de cabello..."></ion-searchbar>
+
+    <!-- Cuadro de resumen de ventas -->
+    <ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center" *ngIf="!loading && filteredHaircuts.length">
+      <div>
+        <h5>{{filteredHaircuts.length}}</h5>
+        <p>Cortes de cabello</p>
+      </div>
+    </ion-card>
+  
+    <!-- Listado de cortes -->
+    <ion-grid *ngIf="!loading">
+      <ion-row>
+        <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let p of filteredHaircuts">
+          <ion-card mode="ios" class="responsive-card">
+            <img [src]="p.image" class="responsive-image" />
+            <ion-card-header>
+              <ion-card-title>{{p.name}}</ion-card-title>
+              <ion-card-subtitle>Corte de cabello</ion-card-subtitle>
+            </ion-card-header>
+    
+            <ion-card-content>
+              Descripción: {{p.description}}
+            </ion-card-content>
+    
+            <!-- Botones -->
+            <div class="button-wrapper" *ngIf="user().isAdmin">
+              <ion-row>
+                <ion-col>
+                  <ion-button expand="block" color="primary" size="default" (click)="addUpdateHaircut(p)">
+                    <ion-icon slot="start" name="create-outline"></ion-icon>
+                    Editar
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-button expand="block" color="danger" size="default" (click)="confirmDeleteHaircut(p)">
+                    <ion-icon #trashIcon slot="start" name="trash-outline"></ion-icon>
+                    Eliminar
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  
+     <!-- ====== Cuando no hay productos disponibles ====== -->
+     <div *ngIf="!loading && !filteredHaircuts.length" class="empty">
+      <ion-icon  name="shield-outline"></ion-icon>
+      <h3>No hay cortes de cabello disponibles</h3>
+    </div>

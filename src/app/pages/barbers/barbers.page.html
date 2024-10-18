@@ -1,0 +1,59 @@
+<app-header [isModal]="true"  title="BARBEROS"></app-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterUsers()" placeholder="Buscar barberos..."></ion-searchbar>
+
+    <!-- Cuadro de resumen de ventas -->
+    <ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center" *ngIf="!loading && filteredUsers.length">
+      <div>
+        <h5>{{filteredUsers.length}}</h5>
+        <p>Barberos</p>
+      </div>
+    </ion-card>
+  
+    <!-- Listado de citas -->
+    <ion-list *ngIf="!loading">
+      <ion-item-sliding class="product-item" *ngFor="let p of filteredUsers">
+        <ion-item>
+          <ion-card mode="ios">
+            <img [src]="p.image" />
+            <ion-card-header>
+              <ion-card-title>{{p.name}}</ion-card-title>
+              <ion-card-subtitle>Usuario</ion-card-subtitle>
+            </ion-card-header>
+          
+            <ion-card-content>
+              <h3>Apellido: </h3> {{p.lastName}}
+              <h3>Celular: </h3> {{p.phone}}
+              <h3>Email: </h3>{{p.email}}
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+  
+        <!-- ===== Opciones para cada producto ===== -->
+        <ion-item-options>
+          <!-- Editar -->
+          <ion-item-option (click)="addUpdateBarbers(p)">
+            <ion-icon class="option-btn" name="create-outline"></ion-icon>
+          </ion-item-option>
+  
+          <!-- Eliminar -->
+          <ion-item-option (click)="confirmDeleteBarber(p)" color="danger">
+            <ion-icon class="option-btn" name="trash-outline"></ion-icon>
+          </ion-item-option>
+  
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  
+     <!-- ====== Cuando no hay productos disponibles ====== -->
+     <div *ngIf="!loading && !filteredUsers.length" class="empty">
+      <ion-icon  name="shield-outline"></ion-icon>
+      <h3>No hay sucursales disponibles</h3>
+    </div>
+  
+</ion-content>

@@ -1,0 +1,78 @@
+<app-header title="Cuenta"></app-header>
+
+<ion-content>
+  <ion-card>
+    <ion-item lines="none">
+      <ion-avatar slot="start" class="custom-avatar">
+        <img [src]="user().isBarber ? user().image : image " alt="Avatar">
+      </ion-avatar>
+      <ion-label>
+        <ion-item>
+          <ion-label>
+            <p>Nombre</p>
+            <h1>{{user().name}}</h1>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Apellido</p>
+            <h1>{{user().lastName}}</h1>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Email</p>
+            <h1>{{user().email}}</h1>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>
+            <p>Celular</p>
+            <h1>{{user().phone}}</h1>
+          </ion-label>
+        </ion-item>
+      </ion-label>
+    </ion-item>
+      <ion-list inset="true">
+        <ion-item [button]="true" mode="ios">
+          <ion-icon color="primary" slot="start" name="create" size="large"></ion-icon>
+          <ion-label>Editar Perfil</ion-label>
+        </ion-item>
+      </ion-list>
+  </ion-card>
+
+  <ion-card *ngIf="user().isAdmin">
+    <ion-card-header>
+      <ion-card-subtitle>
+        Opciones de
+      </ion-card-subtitle>
+      <ion-card-title>
+        Administrador
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list inset="true">
+        <ion-item [button]="true" mode="ios" (click)="openBranchs()">
+          <ion-icon color="primary" slot="start" name="storefront" size="large"></ion-icon>
+          <ion-label color="primary">Administrar Sucursales</ion-label> 
+        </ion-item>
+        <ion-item [button]="true" mode="ios" (click)="openBarbers()" >
+          <ion-icon color="primary" slot="start" name="person-add" size="large"></ion-icon>
+          <ion-label color="primary">Administrar Barberos</ion-label> 
+        </ion-item>
+        <ion-item [button]="true" mode="ios" (click)="openClients()">
+          <ion-icon color="primary" slot="start" name="person-remove" size="large"></ion-icon>
+          <ion-label color="primary">Administrar Clientes</ion-label> 
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-button 
+        type="submit"
+        expand="block" 
+        mode="ios"
+        class="submit"
+        color="danger">
+        Cerrar sesión
+  </ion-button>
+</ion-content>
