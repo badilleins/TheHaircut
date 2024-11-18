@@ -20,6 +20,7 @@ export class ClientsPage {
   searchTerm: string = '';
   loading:boolean = false
 
+
   ionViewWillEnter() {
     this.getClients()
   }
@@ -61,15 +62,59 @@ export class ClientsPage {
 
   async addUpdateClient(user?: User)
   {
-
+    let success = await this.utilsSrv.presentModal({
+      component: AddUpdateClientComponent,
+      cssClass: 'add-update-modal',
+      componentProps: { user }
+    })
   }
 
   confirmDeleteClient(user: User) {
-
+    this.utilsSrv.presentAlert({
+      header: 'Eliminar Cliente',
+      message: '¿Estás seguro de eliminar a este cliente?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => this.deleteClient(user),
+        },
+      ],
+    });
   }
 
   async deleteClient(user: User) {
+    let path = `users/${user.uid}`;
 
+    const loading = await this.utilsSrv.loading();
+    await loading.present();
+
+    try {
+      let pathImage = await this.firebaseSrv.getFilePath(user.image)
+      await this.firebaseSrv.deleteDocument(path);
+      await this.firebaseSrv.deleteFile(pathImage)
+      this.utilsSrv.showToast({
+        message: 'Cliente eliminado exitosamente',
+        duration: 1500,
+        color: 'success',
+        position: 'middle',
+        icon: 'checkmark-circle-outline',
+      });
+    } catch (error) {
+      this.utilsSrv.showToast({
+        message:"Ha ocurrido un error",
+        duration: 2500,
+        color: 'primary',
+        position: 'middle',
+        icon: 'alert-circle-outline',
+      });
+    } finally {
+      loading.dismiss();
+    }
   }
 
   filterUsers() {

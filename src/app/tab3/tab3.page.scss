@@ -1,9 +1,4 @@
-ion-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
+
   ion-card {
     padding: 10px;
   }
@@ -12,4 +7,40 @@ ion-avatar img {
     width: 90px;
     height: 90px;
     --border-radius: 50%; // Asegúrate de que el avatar sea circular
+  }
+
+  .custom-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+
+  .custom-avatar img.editable {
+    border: 2px dashed #ccc;
+  }
+  .upload-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    height: 100%;
+  }
+
+  .upload-label button {
+    background-color: var(--ion-color-primary);
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .upload-label button:hover {
+    opacity: 0.8;
   }

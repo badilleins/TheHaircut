@@ -79,7 +79,7 @@ export class BarbersPage {
         },
         {
           text: 'Eliminar',
-          handler: () => this.deleteBarber(user), 
+          handler: () => this.deleteBarber(user),
         },
       ],
     });
