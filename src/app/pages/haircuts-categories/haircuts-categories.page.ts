@@ -107,7 +107,7 @@ export class HaircutsCategoriesPage {
   }
 
   selected(){
-    this.selectedCategory = 
+    
   }
 
   filterCategories() {
@@ -144,7 +144,6 @@ export class HaircutsCategoriesPage {
       category.name.toLowerCase().includes(searchTerm) && 
       category.type === selectedCategory
     );
-  }
   }
 
   
