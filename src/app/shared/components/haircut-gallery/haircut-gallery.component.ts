@@ -17,7 +17,6 @@ export class HaircutGalleryComponent implements OnInit {
 
   ngOnInit(): void {
       this.getHaircuts()
-      this.getCategories()
   }
 
   utilsSrv = inject(UtilsService)
@@ -27,7 +26,7 @@ export class HaircutGalleryComponent implements OnInit {
   @ViewChild('trashIcon', { read: ElementRef, static: false }) trashIcons!: ElementRef;
 
   haircuts: Haircut[] = []
-  categories: Category[] = []
+  categories: String[] = []
   filteredHaircuts: Haircut[]=[]
   searchTerm: string = '';
   selectedCategory:string = '';
@@ -62,8 +61,10 @@ export class HaircutGalleryComponent implements OnInit {
         this.haircuts = res
         this.filteredHaircuts = res
         this.loading = false;
+        this.getCategories();
       }
     })
+    
   }
 
   async addUpdateHaircut(haircut?: Haircut)
@@ -128,15 +129,33 @@ export class HaircutGalleryComponent implements OnInit {
     }
   }
 
+  select(event){
+    this.selectedCategory= event.detail.value
+    this.filterHaircuts();
+  }
+
   filterHaircuts() {
-    const searchTerm = this.searchTerm.toLowerCase();
-    const selectedCategory = this.selectedCategory;
-    if (searchTerm.trim() === '') {
+    const searchTerm = this.searchTerm.toLowerCase().trim(); // Término de búsqueda
+
+    // Si no hay término de búsqueda ni categoría seleccionada, mostrar todas las categorías
+    if (searchTerm === '' && !this.selectedCategory) {
       this.filteredHaircuts = this.haircuts;
+    } else if (searchTerm === '') {
+      // Filtrar solo por categoría si no hay término de búsqueda
+      this.filteredHaircuts = this.haircuts.filter(item => 
+        item.category === this.selectedCategory
+      );
+    } else if (!this.selectedCategory) {
+      // Filtrar solo por nombre si no hay categoría seleccionada
+      this.filteredHaircuts = this.haircuts.filter(item => 
+        item.name.toLowerCase().includes(searchTerm)
+      );
     } else {
-      this.filteredHaircuts = this.haircuts.filter(haircut => {
-        return haircut.name.toLowerCase().includes(searchTerm);
-      });
+      // Filtrar por nombre y categoría
+      this.filteredHaircuts = this.haircuts.filter(item => 
+        item.name.toLowerCase().includes(searchTerm) && 
+        item.category === this.selectedCategory
+      );
     }
   }
 
@@ -157,13 +176,11 @@ export class HaircutGalleryComponent implements OnInit {
   }
 
   async getCategories() {
-    let path = `haircutsCategories`;
-
-    let sub = this.firebaseSrv.getCollectionData(path).subscribe({
-      next: (res: any) => {
-        this.categories = res
+    this.haircuts.forEach(item => {
+      if (!this.categories.includes(item.category)) {
+        this.categories.push(item.category);
       }
-    })
+    });
   }
 
   constructor() {}

@@ -20,6 +20,7 @@ import { AddUpdateProductComponent } from './components/add-update-product/add-u
 import { BarChartComponent } from './components/bar-chart/bar-chart.component';
 import { BaseChartDirective } from 'ng2-charts';
 import { AddUpdateHaircutCategoryComponent } from './components/add-update-haircut-category/add-update-haircut-category.component';
+import { AddUpdateProductCategoryComponent } from './components/add-update-product-category/add-update-product-category.component';
 
 registerLocaleData(localeEs)
 
@@ -38,7 +39,8 @@ registerLocaleData(localeEs)
     AddUpdateHaircutComponent,
     AddUpdateProductComponent,
     BarChartComponent,
-    AddUpdateHaircutCategoryComponent
+    AddUpdateHaircutCategoryComponent,
+    AddUpdateProductCategoryComponent
   ],
   imports: [
     CommonModule,
@@ -59,7 +61,9 @@ registerLocaleData(localeEs)
     CalendarComponent,
     HaircutGalleryComponent,
     ProductsComponent,
-    BarChartComponent
+    BarChartComponent,
+    AddUpdateProductCategoryComponent
+    
   ]
 })
 export class SharedModule { }

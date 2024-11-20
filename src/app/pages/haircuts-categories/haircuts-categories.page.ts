@@ -18,7 +18,6 @@ export class HaircutsCategoriesPage {
 
   categories: Category[] = []
   filteredCategories: Category[]=[]
-  selectedCategory: String;
   searchTerm: string = '';
   loading:boolean = false
 
@@ -106,47 +105,19 @@ export class HaircutsCategoriesPage {
     }
   }
 
-  selected(){
-    
-  }
-
   filterCategories() {
-  //   const searchTerm = this.searchTerm.toLowerCase();
+    const searchTerm = this.searchTerm.toLowerCase();
 
-  //   if (searchTerm.trim() === '') {
-  //     // Si no hay nada en el searchTerm, mostrar todas las sucursales
-  //     this.filteredCategories = this.categories;
-  //   } else {
-  //     // Filtrar las sucursales
-  //     this.filteredCategories = this.categories.filter(category => {
-  //       return category.name.toLowerCase().includes(searchTerm);
-  //     });
-  //   }
-  const searchTerm = this.searchTerm.toLowerCase().trim(); // Término de búsqueda
-  const selectedCategory = this.selectedCategory; // Categoría seleccionada
-
-  // Si no hay término de búsqueda ni categoría seleccionada, mostrar todas las categorías
-  if (searchTerm === '' && !selectedCategory) {
-    this.filteredCategories = this.categories;
-  } else if (searchTerm === '') {
-    // Filtrar solo por categoría si no hay término de búsqueda
-    this.filteredCategories = this.categories.filter(category => 
-      category.type === selectedCategory
-    );
-  } else if (!selectedCategory) {
-    // Filtrar solo por nombre si no hay categoría seleccionada
-    this.filteredCategories = this.categories.filter(category => 
-      category.name.toLowerCase().includes(searchTerm)
-    );
-  } else {
-    // Filtrar por nombre y categoría
-    this.filteredCategories = this.categories.filter(category => 
-      category.name.toLowerCase().includes(searchTerm) && 
-      category.type === selectedCategory
-    );
+    if (searchTerm.trim() === '') {
+      // Si no hay nada en el searchTerm, mostrar todas las sucursales
+      this.filteredCategories = this.categories;
+    } else {
+      // Filtrar las sucursales
+      this.filteredCategories = this.categories.filter(category => {
+        return category.name.toLowerCase().includes(searchTerm);
+      });
+    }
   }
-
-  
 
   constructor() {}
 

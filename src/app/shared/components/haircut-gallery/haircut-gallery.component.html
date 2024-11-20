@@ -7,9 +7,9 @@
         <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterHaircuts()" placeholder="Buscar cortes de cabello..." animated="true"></ion-searchbar>
       </ion-col>
       <ion-col size="12" size-sm="12" size-md="3" size-lg="2">
-        <ion-select label="Filtrar por categoria" interface="popover" label-placement="floating">
-          <ion-select-option *ngFor="let p of categories" [value]="p.name">{{p.name}}</ion-select-option>
-          <ion-select-option value="otros">Otros</ion-select-option>
+        <ion-select label="Filtrar por categoria" interface="popover" label-placement="floating" (ionChange)="select($event)">
+          <ion-select-option *ngFor="let p of categories" [value]="p">{{p}}</ion-select-option>
+          <ion-select-option [value]="null">Ninguno</ion-select-option>
         </ion-select>
       </ion-col>
     </ion-row>

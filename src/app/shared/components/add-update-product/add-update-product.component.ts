@@ -1,5 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Category } from 'src/app/models/category.model';
 import { Product } from 'src/app/models/product.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -17,11 +18,14 @@ export class AddUpdateProductComponent  implements OnInit {
   utilsSrv = inject(UtilsService)
   firebaseSvc = inject(FirebaseService);
 
+  categories: Category[]=[]
+
   form = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('',[Validators.required, Validators.minLength(4)]),
     description: new FormControl('',[Validators.required]),
     image: new FormControl('',[Validators.required]),
+    category: new FormControl('',[Validators.required]),
     price: new FormControl(0, [Validators.required])
   })
 
@@ -31,6 +35,7 @@ export class AddUpdateProductComponent  implements OnInit {
 
   ngOnInit() {
     this.user = this.utilsSrv.getFromLocalStorage('user');
+    this.getCategories()
     if (this.product) this.form.setValue(this.product);
   }
 
@@ -135,4 +140,18 @@ export class AddUpdateProductComponent  implements OnInit {
       }
     }
 
+    selectOnChange(event){
+      this.form.controls.category.setValue(event.detail.value)
+      console.log(this.form.controls)
+    }
+
+    async getCategories() {
+      let path = `productsCategories`;
+  
+      let sub = this.firebaseSvc.getCollectionData(path).subscribe({
+        next: (res: any) => {
+          this.categories = res
+        }
+      })
+    }
 }
