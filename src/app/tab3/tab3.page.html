@@ -57,12 +57,20 @@
           <ion-label color="primary">Administrar Sucursales</ion-label> 
         </ion-item>
         <ion-item [button]="true" mode="ios" (click)="openBarbers()" >
-          <ion-icon color="primary" slot="start" name="person-add" size="large"></ion-icon>
+          <ion-icon color="primary" slot="start" name="cut" size="large"></ion-icon>
           <ion-label color="primary">Administrar Barberos</ion-label> 
         </ion-item>
         <ion-item [button]="true" mode="ios" (click)="openClients()">
-          <ion-icon color="primary" slot="start" name="person-remove" size="large"></ion-icon>
+          <ion-icon color="primary" slot="start" name="people" size="large"></ion-icon>
           <ion-label color="primary">Administrar Clientes</ion-label> 
+        </ion-item>
+        <ion-item [button]="true" mode="ios" (click)="openHaircutsCategories()">
+          <ion-icon color="primary" slot="start" name="pricetag" size="large"></ion-icon>
+          <ion-label color="primary">Categorias Cortes</ion-label> 
+        </ion-item>
+        <ion-item [button]="true" mode="ios" (click)="openClients()">
+          <ion-icon color="primary" slot="start" name="pricetag" size="large"></ion-icon>
+          <ion-label color="primary">Categorias Productos</ion-label> 
         </ion-item>
       </ion-list>
     </ion-card-content>

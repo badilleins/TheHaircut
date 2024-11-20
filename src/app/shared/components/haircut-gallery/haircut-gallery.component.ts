@@ -6,6 +6,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddUpdateHaircutComponent } from '../add-update-haircut/add-update-haircut.component';
 import { AnimationController } from '@ionic/angular';
+import { Category } from 'src/app/models/category.model';
 
 @Component({
   selector: 'app-haircut-gallery',
@@ -16,6 +17,7 @@ export class HaircutGalleryComponent implements OnInit {
 
   ngOnInit(): void {
       this.getHaircuts()
+      this.getCategories()
   }
 
   utilsSrv = inject(UtilsService)
@@ -25,8 +27,10 @@ export class HaircutGalleryComponent implements OnInit {
   @ViewChild('trashIcon', { read: ElementRef, static: false }) trashIcons!: ElementRef;
 
   haircuts: Haircut[] = []
+  categories: Category[] = []
   filteredHaircuts: Haircut[]=[]
   searchTerm: string = '';
+  selectedCategory:string = '';
   loading:boolean = false
 
   ionViewWillEnter() {
@@ -126,12 +130,10 @@ export class HaircutGalleryComponent implements OnInit {
 
   filterHaircuts() {
     const searchTerm = this.searchTerm.toLowerCase();
-
+    const selectedCategory = this.selectedCategory;
     if (searchTerm.trim() === '') {
-      // Si no hay nada en el searchTerm, mostrar todas las sucursales
       this.filteredHaircuts = this.haircuts;
     } else {
-      // Filtrar las sucursales
       this.filteredHaircuts = this.haircuts.filter(haircut => {
         return haircut.name.toLowerCase().includes(searchTerm);
       });
@@ -152,6 +154,16 @@ export class HaircutGalleryComponent implements OnInit {
       animation.play().then(() => {
         onComplete(); // Eliminar el producto de la lista después de la animación
       });
+  }
+
+  async getCategories() {
+    let path = `haircutsCategories`;
+
+    let sub = this.firebaseSrv.getCollectionData(path).subscribe({
+      next: (res: any) => {
+        this.categories = res
+      }
+    })
   }
 
   constructor() {}

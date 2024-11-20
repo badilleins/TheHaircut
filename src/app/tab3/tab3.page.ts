@@ -4,6 +4,7 @@ import { UtilsService } from '../services/utils.service';
 import { BranchesPage } from '../pages/branches/branches.page';
 import { BarbersPage } from '../pages/barbers/barbers.page';
 import { ClientsPage } from '../pages/clients/clients.page';
+import { HaircutsCategoriesPage } from '../pages/haircuts-categories/haircuts-categories.page';
 
 @Component({
   selector: 'app-tab3',
@@ -34,6 +35,12 @@ export class Tab3Page {
   async openClients(){
     let success = await this.utilsSrv.presentModal({
       component: ClientsPage,
+      cssClass: 'add-update-modal',
+    })
+  }
+  async openHaircutsCategories(){
+    let success = await this.utilsSrv.presentModal({
+      component: HaircutsCategoriesPage,
       cssClass: 'add-update-modal',
     })
   }

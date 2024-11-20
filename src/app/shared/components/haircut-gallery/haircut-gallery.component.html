@@ -1,19 +1,31 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
-  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterHaircuts()" placeholder="Buscar cortes de cabello..."></ion-searchbar>
-
-    <!-- Cuadro de resumen de ventas -->
-    <ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center" *ngIf="!loading && filteredHaircuts.length">
-      <div>
-        <h5>{{filteredHaircuts.length}}</h5>
-        <p>Cortes de cabello</p>
-      </div>
-    </ion-card>
-  
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-sm="12" size-md="9" size-lg="10">
+        <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterHaircuts()" placeholder="Buscar cortes de cabello..." animated="true"></ion-searchbar>
+      </ion-col>
+      <ion-col size="12" size-sm="12" size-md="3" size-lg="2">
+        <ion-select label="Filtrar por categoria" interface="popover" label-placement="floating">
+          <ion-select-option *ngFor="let p of categories" [value]="p.name">{{p.name}}</ion-select-option>
+          <ion-select-option value="otros">Otros</ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center" *ngIf="!loading && filteredHaircuts.length">
+          <div>
+            <h5>{{filteredHaircuts.length}}</h5>
+            <p>Cortes de cabello</p>
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
     <!-- Listado de cortes -->
-    <ion-grid *ngIf="!loading">
+    <ion-grid *ngIf="!loading" class="galeria">
       <ion-row>
         <ion-col size="12" size-sm="6" size-md="4" size-lg="3" *ngFor="let p of filteredHaircuts">
           <ion-card mode="ios" class="responsive-card">
@@ -24,6 +36,7 @@
             </ion-card-header>
     
             <ion-card-content>
+              <h2>Categoria: {{p.category}}</h2>
               Descripción: {{p.description}}
             </ion-card-content>
     
