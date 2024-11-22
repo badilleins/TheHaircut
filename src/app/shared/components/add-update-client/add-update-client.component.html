@@ -23,29 +23,31 @@
 
       <!-- Caja de texto para el nombre -->
       <app-custom-input
+        icon="person"
         autocomplete="name"
         [control]="form.controls.name"
         type="text"
-        label="Nombre">
+        label="Nombre de cliente">
       </app-custom-input>
       <div
         class="validators"
         *ngIf="form.controls.name.errors && form.controls.name.touched">
-        <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
+        <div *ngIf="form.controls.name.errors?.['required']">El nombre de cliente es requerido</div>
         <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>
 
       <!-- Caja de texto para el apellido -->
       <app-custom-input
-        autocomplete="name"
+        icon="person-add"
+        autocomplete="lastName"
         [control]="form.controls.lastName"
         type="text"
-        label="Apellido">
+        label="Apellido de cliente">
       </app-custom-input>
       <div
         class="validators"
         *ngIf="form.controls.lastName.errors && form.controls.lastName.touched">
-        <div *ngIf="form.controls.lastName.errors?.['required']">El apellido es requerido</div>
+        <div *ngIf="form.controls.lastName.errors?.['required']">El apellido de cliente es requerido</div>
         <div *ngIf="form.controls.lastName.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>
 

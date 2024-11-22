@@ -29,7 +29,15 @@ const routes: Routes = [
   {
     path: 'tab5',
     loadChildren: () => import('./tab5/tab5.module').then( m => m.Tab5PageModule)
+  },  {
+    path: 'haircuts-categories',
+    loadChildren: () => import('./pages/haircuts-categories/haircuts-categories.module').then( m => m.HaircutsCategoriesPageModule)
+  },
+  {
+    path: 'products-categories',
+    loadChildren: () => import('./pages/products-categories/products-categories.module').then( m => m.ProductsCategoriesPageModule)
   }
+
 ];
 @NgModule({
   imports: [

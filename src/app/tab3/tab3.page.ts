@@ -7,6 +7,8 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { BranchesPage } from '../pages/branches/branches.page';
 import { BarbersPage } from '../pages/barbers/barbers.page';
 import { ClientsPage } from '../pages/clients/clients.page';
+import { HaircutsCategoriesPage } from '../pages/haircuts-categories/haircuts-categories.page';
+import { ProductsCategoriesPage } from '../pages/products-categories/products-categories.page';
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -47,7 +49,19 @@ export class Tab3Page {
       cssClass: 'add-update-modal',
     })
   }
+  async openHaircutsCategories(){
+    let success = await this.utilsSrv.presentModal({
+      component: HaircutsCategoriesPage,
+      cssClass: 'add-update-modal',
+    })
+  }
 
+  async openProductsCategories(){
+    let success = await this.utilsSrv.presentModal({
+      component: ProductsCategoriesPage,
+      cssClass: 'add-update-modal',
+    })
+  }
   async editProfile() {
     if (this.isEditing) {
       try {

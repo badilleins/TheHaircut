@@ -5,8 +5,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterBranchs()" placeholder="Buscar sucursales..."></ion-searchbar>
-
+  <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterBranchs()" placeholder="Buscar sucursales..." animated="true"></ion-searchbar>
     <!-- Cuadro de resumen de ventas -->
     <ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center" *ngIf="!loading && filteredBranchs.length">
       <div>

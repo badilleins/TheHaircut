@@ -25,6 +25,8 @@ animationCtrl = inject(AnimationController);
 @ViewChild('trashIcon', { read: ElementRef, static: false }) trashIcons!: ElementRef;
 
 products: Product[] = []
+categories: String[] = []
+selectedCategory: String;
 filteredProducts: Product[]=[]
 searchTerm: string = '';
 loading:boolean = false
@@ -58,6 +60,7 @@ async getProducts() {
       this.products = res
       this.filteredProducts = res
       this.loading = false;
+      this.getCategories()
     }
   })
 }
@@ -124,18 +127,34 @@ async deleteProduct(product: Product) {
   }
 }
 
-filterProducts() {
-  const searchTerm = this.searchTerm.toLowerCase();
+select(event){
+  this.selectedCategory= event.detail.value
+  this.filterProducts();
+}
 
-  if (searchTerm.trim() === '') {
-    // Si no hay nada en el searchTerm, mostrar todas las sucursales
-    this.filteredProducts = this.products;
-  } else {
-    // Filtrar las sucursales
-    this.filteredProducts = this.products.filter(product => {
-      return product.name.toLowerCase().includes(searchTerm);
-    });
-  }
+filterProducts() {
+  const searchTerm = this.searchTerm.toLowerCase().trim(); // Término de búsqueda
+
+    // Si no hay término de búsqueda ni categoría seleccionada, mostrar todas las categorías
+    if (searchTerm === '' && !this.selectedCategory) {
+      this.filteredProducts = this.products;
+    } else if (searchTerm === '') {
+      // Filtrar solo por categoría si no hay término de búsqueda
+      this.filteredProducts = this.products.filter(item => 
+        item.category === this.selectedCategory
+      );
+    } else if (!this.selectedCategory) {
+      // Filtrar solo por nombre si no hay categoría seleccionada
+      this.filteredProducts = this.products.filter(item => 
+        item.name.toLowerCase().includes(searchTerm)
+      );
+    } else {
+      // Filtrar por nombre y categoría
+      this.filteredProducts = this.products.filter(item => 
+        item.name.toLowerCase().includes(searchTerm) && 
+        item.category === this.selectedCategory
+      );
+    }
 }
 
 playDeleteIconAnimation(iconElement: any, onComplete: () => void) {
@@ -152,6 +171,14 @@ playDeleteIconAnimation(iconElement: any, onComplete: () => void) {
     animation.play().then(() => {
       onComplete(); // Eliminar el producto de la lista después de la animación
     });
+}
+
+async getCategories() {
+  this.products.forEach(item => {
+    if (!this.categories.includes(item.category)) {
+      this.categories.push(item.category);
+    }
+  });
 }
 
 constructor() {}

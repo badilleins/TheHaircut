@@ -24,15 +24,16 @@
       <!-- Caja de texto para el nombre -->
 
       <app-custom-input
+        icon="storefront"
         autocomplete="name"
         [control]="form.controls.name"
         type="text"
-        label="Nombre">
+        label="Nombre de sucursal">
       </app-custom-input>
       <div
         class="validators"
         *ngIf="form.controls.name.errors && form.controls.name.touched">
-        <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
+        <div *ngIf="form.controls.name.errors?.['required']">El nombre de sucursal es requerido</div>
         <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>
 
@@ -43,12 +44,12 @@
         [pickerType]="'address'"
         [control]="form.controls.address"
         type="text"
-        label="Dirección">
+        label="Dirección de sucursal">
       </app-custom-input>
       <div
         class="validators"
         *ngIf="form.controls.address.errors && form.controls.address.touched">
-        <div *ngIf="form.controls.address.errors?.['required']">La dirección es requerida</div>
+        <div *ngIf="form.controls.address.errors?.['required']">La dirección de sucursal es requerida</div>
         <div *ngIf="form.controls.address.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>
 

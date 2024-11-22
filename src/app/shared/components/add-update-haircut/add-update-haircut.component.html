@@ -24,10 +24,11 @@
       <!-- Caja de texto para el nombre -->
 
       <app-custom-input
+        icon="cut"
         autocomplete="name"
         [control]="form.controls.name"
         type="text"
-        label="Nombre">
+        label="Corte de cabello">
       </app-custom-input>
       <div 
         class="validators" 
@@ -37,17 +38,20 @@
       </div> 
       
       <app-custom-input
+        icon="clipboard"
         autocomplete="name"
         [control]="form.controls.description"
         type="text"
-        label="Descripcion">
+        label="Descripción del corte">
       </app-custom-input>
       <div 
         class="validators" 
         *ngIf="form.controls.description.errors && form.controls.description.touched">
         <div *ngIf="form.controls.description.errors?.['required']">La dirección es requerida</div>
       </div>
-      
+      <ion-select fill="outline" class="select" label="Categoría" interface="popover"  okText="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChange($event)">
+        <ion-select-option *ngFor="let p of categories" [value]="p.name">{{p.name}}</ion-select-option>
+      </ion-select>
       <!-- Botón para registrar o actualizar -->
       <ion-button 
         class="ion-margin"

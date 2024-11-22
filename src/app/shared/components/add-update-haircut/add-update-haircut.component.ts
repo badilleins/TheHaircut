@@ -1,3 +1,4 @@
+import { Category } from './../../../models/category.model';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Haircut } from 'src/app/models/haircut.model';
@@ -17,9 +18,12 @@ export class AddUpdateHaircutComponent  implements OnInit {
   utilsSrv = inject(UtilsService)
   firebaseSvc = inject(FirebaseService);
 
+  categories: Category[] = []
+
   form = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('',[Validators.required, Validators.minLength(4)]),
+    category: new FormControl('', [Validators.required]),
     description: new FormControl('',[Validators.required]),
     image: new FormControl('',[Validators.required]),
   })
@@ -30,6 +34,7 @@ export class AddUpdateHaircutComponent  implements OnInit {
 
   ngOnInit() {
     this.user = this.utilsSrv.getFromLocalStorage('user');
+    this.getCategories();
     if (this.haircut) this.form.setValue(this.haircut);
   }
 
@@ -132,6 +137,21 @@ export class AddUpdateHaircutComponent  implements OnInit {
       } finally {
         loading.dismiss();
       }
+    }
+
+    selectOnChange(event){
+      this.form.controls.category.setValue(event.detail.value)
+      console.log(this.form.controls)
+    }
+
+    async getCategories() {
+      let path = `haircutsCategories`;
+  
+      let sub = this.firebaseSvc.getCollectionData(path).subscribe({
+        next: (res: any) => {
+          this.categories = res
+        }
+      })
     }
 
 }

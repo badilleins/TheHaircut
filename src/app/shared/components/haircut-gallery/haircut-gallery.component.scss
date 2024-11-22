@@ -19,6 +19,38 @@ ion-item ion-card{
     margin-top: auto; /* Empuja el contenido hacia arriba y deja los botones al final del card */
   }
 
-ion-grid{
+.galeria{
     margin-bottom: 54px;
+}
+ion-radio-group{
+    padding-left: 5%;
+}
+
+ion-radio{
+    padding-left: 2%;
+}
+
+ion-select {
+    --border-radius: 8px; // Bordes redondeados
+    padding: 10px;
+    font-size: 16px; // Tamaño de fuente
+    transition: border-color 0.3s; // Transición para el borde4
+    max-width: 200px;
+    &:focus {
+        //border-color: $primary-color; // Cambia el color del borde al enfocar
+        outline: none; // Sin borde por defecto del navegador
+    }
+}
+
+ion-searchbar {
+    --border-radius: 8px; // Bordes redondeados
+    --background: #FFFFFF;
+    padding: 10px;
+    --font-size: 16px; // Tamaño de fuente
+    transition: border-color 0.3s; // Transición para el borde
+
+    &:focus {
+        //border-color: $primary-color; // Cambia el color del borde al enfocar
+        outline: none; // Sin borde por defecto del navegador
+    }
 }

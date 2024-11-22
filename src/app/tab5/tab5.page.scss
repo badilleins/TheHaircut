@@ -1,0 +1,11 @@
+/* Primera fila: Card ocupa el 80% y está centrado */
+.first-row-card {
+    width: 80%;
+    margin: 0 auto; /* Centrado */
+  }
+  ion-card-title{
+    text-align: center;
+  }
+  ion-card-content{
+    text-align: center;
+  }
