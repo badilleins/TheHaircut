@@ -38,8 +38,8 @@ time-modal{
 }
 
 ion-modal {
-  --width: 100%; /* Ajusta al contenido */
-  --height: 100%; /* Ajusta al contenido */
+  --width: auto; /* Ajusta al contenido */
+  --height: auto; /* Ajusta al contenido */
   --max-width: 350px; /* Establece un tamaño máximo */
   --border-radius: 16px; /* Bordes redondeados para estilo */
   --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Opcional, para darle profundidad */
