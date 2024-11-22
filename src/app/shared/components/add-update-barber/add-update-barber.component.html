@@ -30,6 +30,8 @@
       </app-custom-input>
       <div
         class="validators"
+      <div
+        class="validators"
         *ngIf="form.controls.name.errors && form.controls.name.touched">
         <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
         <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
@@ -48,12 +50,7 @@
         <div *ngIf="form.controls.lastName.errors?.['required']">El apellido es requerido</div>
         <div *ngIf="form.controls.lastName.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>
-      <!-- <ion-datetime presentation="time" [preferWheel]="true">
-        <ion-buttons slot="buttons">
-            <ion-button color="danger">Cancelar</ion-button>
-            <ion-button color="success">Aceptar</ion-button>
-        </ion-buttons>
-      </ion-datetime> -->
+
       <app-custom-input
         [isPicker]="true"
         [control]="form.controls.hourStartAt"
@@ -64,6 +61,17 @@
         *ngIf="form.controls.hourStartAt.errors && form.controls.hourStartAt.touched">
         <div *ngIf="form.controls.hourStartAt.errors?.['required']">La hora de inicio es requerida</div>
       </div>
+            <!-- Input hora de fin -->
+    <app-custom-input
+      [isTimePicker]="true"
+      [control]="form.controls.hourEndAt"
+      label="Hora de fin">
+    </app-custom-input>
+    <div
+      class="validators">
+      <div *ngIf="form.controls.hourEndAt.errors?.['required']">La hora de fin es requerida</div>
+      <div *ngIf="form.controls.hourEndAt.errors?.['endTimeInvalid']">La hora de fin debe ser mayor a la hora de inicio.</div>
+    </div>
       <!-- Botón para registrar o actualizar -->
       <ion-button
         class="ion-margin"

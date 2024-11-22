@@ -22,7 +22,7 @@ export class AddUpdateBranchComponent  implements OnInit {
     id: new FormControl(''),
     name: new FormControl('',[Validators.required, Validators.minLength(4)]),
     address: new FormControl('',[Validators.required]),
-    image: new FormControl('',[Validators.required]),
+    image : new FormControl('',Validators.required),
     hourStart: new FormControl(0,[Validators.required]),
     hourEnd : new FormControl(0,Validators.required)
   },
