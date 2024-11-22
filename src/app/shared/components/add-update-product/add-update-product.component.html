@@ -24,10 +24,11 @@
       <!-- Caja de texto para el nombre -->
 
       <app-custom-input
+        icon="basket"
         autocomplete="name"
         [control]="form.controls.name"
         type="text"
-        label="Nombre">
+        label="Nombre del producto">
       </app-custom-input>
       <div 
         class="validators" 
@@ -37,6 +38,7 @@
       </div> 
       
       <app-custom-input
+        icon="clipboard"
         autocomplete="name"
         [control]="form.controls.description"
         type="text"
@@ -49,6 +51,7 @@
       </div>
 
       <app-custom-input
+        icon="cash"
         autocomplete="name"
         [control]="form.controls.price"
         type="number"

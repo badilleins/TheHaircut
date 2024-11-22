@@ -24,10 +24,11 @@
       <!-- Caja de texto para el nombre -->
 
       <app-custom-input
+        icon="cut"
         autocomplete="name"
         [control]="form.controls.name"
         type="text"
-        label="Nombre">
+        label="Corte de cabello">
       </app-custom-input>
       <div 
         class="validators" 
@@ -37,10 +38,11 @@
       </div> 
       
       <app-custom-input
+        icon="clipboard"
         autocomplete="name"
         [control]="form.controls.description"
         type="text"
-        label="Descripcion">
+        label="Descripción del corte">
       </app-custom-input>
       <div 
         class="validators" 

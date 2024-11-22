@@ -13,6 +13,7 @@
       <!-- Caja de texto para el nombre -->
 
       <app-custom-input
+        icon="person"
         autocomplete="name"
         [control]="form.controls.name"
         type="text"
@@ -25,6 +26,7 @@
         <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>   
       <app-custom-input
+        icon="person-add"
         autocomplete="name"
         [control]="form.controls.lastName"
         type="text"
@@ -38,6 +40,7 @@
       </div>   
 
       <app-custom-input
+        icon="calendar"
         autocomplete="name"
         [control]="form.controls.date"
         type="text"
@@ -51,6 +54,7 @@
         <div *ngIf="form.controls.date.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>   
       <app-custom-input
+        icon="cash"
         [control]="form.controls.price"
         type="number"
         label="Precio">

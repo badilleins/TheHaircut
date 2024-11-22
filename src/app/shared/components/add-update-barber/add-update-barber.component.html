@@ -23,6 +23,7 @@
 
       <!-- Caja de texto para el nombre -->
       <app-custom-input
+        icon="person"
         autocomplete="name"
         [control]="form.controls.name"
         type="text"
@@ -37,6 +38,7 @@
 
       <!-- Caja de texto para el apellido -->
       <app-custom-input
+        icon="person-add"
         autocomplete="name"
         [control]="form.controls.lastName"
         type="text"
@@ -55,6 +57,7 @@
         </ion-buttons>
       </ion-datetime> -->
       <app-custom-input
+        icon="time"
         [isTimePicker]="true"
         [control]="form.controls.hourStartAt"
         label="Hora de inicio">

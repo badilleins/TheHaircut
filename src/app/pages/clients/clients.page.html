@@ -5,8 +5,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filterUsers()" placeholder="Buscar clientes..."></ion-searchbar>
-
+  <ion-searchbar fill="outline" animated="true" mode="ios" [(ngModel)]="searchTerm" (ionInput)="filterUsers()" placeholder="Buscar clientes..." animated="true"></ion-searchbar>
     <!-- Cuadro de resumen de ventas -->
     <ion-card mode="ios" color="secondary" class="d-flex-center ion-text-center" *ngIf="!loading && filteredUsers.length">
       <div>
@@ -20,16 +19,22 @@
       <ion-item-sliding class="product-item" *ngFor="let p of filteredUsers">
         <ion-item>
           <ion-card mode="ios">
-            <img [src]="p.image" />
             <ion-card-header>
               <ion-card-title>{{p.name}}</ion-card-title>
               <ion-card-subtitle>Cliente</ion-card-subtitle>
             </ion-card-header>
           
             <ion-card-content>
-              <h3>Apellido: </h3> {{p.lastName}}
-              <h3>Celular: </h3> {{p.phone}}
-              <h3>Email: </h3>{{p.email}}
+              <ion-item>
+                <ion-thumbnail slot="start">
+                  <img alt="Silhouette of mountains" [src]="p.image" />
+                </ion-thumbnail>
+                <ion-label>
+                  <h3>Apellido: </h3> {{p.lastName}}
+                  <h3>Celular: </h3> {{p.phone}}
+                  <h3>Email: </h3>{{p.email}}
+                </ion-label>
+              </ion-item>
             </ion-card-content>
           </ion-card>
         </ion-item>
