@@ -46,18 +46,22 @@ export class AddUpdateClientComponent  implements OnInit {
       if(this.user) this.updateUser();
     }
   }
-
+  async takeImage()
+  {
+    const dataUrl = ( await this.utilsSrv.takePicture('Imagen del cliente')).dataUrl
+    this.form.controls.image.setValue(dataUrl)
+  }
     private async updateUser() {
       let path = `users/${this.user.uid}`;
-  
+
       const loading = await this.utilsSrv.loading();
       await loading.present();
       try {
         // === Actualizar el documento ===
         await this.firebaseSvc.updateDocument(path, this.form.value);
-  
+
         this.utilsSrv.dismissModal({ success: true });
-  
+
         this.utilsSrv.showToast({
           message: 'Cliente actualizado exitosamente',
           duration: 1500,
@@ -67,7 +71,7 @@ export class AddUpdateClientComponent  implements OnInit {
         });
       } catch (error) {
         console.log(error);
-  
+
         this.utilsSrv.showToast({
           message: error.message,
           duration: 2500,
@@ -97,7 +101,7 @@ export class AddUpdateClientComponent  implements OnInit {
             },
             {
               text: 'Agregar',
-              handler: () => this.addBarber(), 
+              handler: () => this.addBarber(),
             },
           ],
         });

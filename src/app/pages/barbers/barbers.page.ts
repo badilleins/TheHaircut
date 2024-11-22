@@ -94,7 +94,6 @@ export class BarbersPage {
     try {
       user.isBarber = false;
       let pathImage = await this.firebaseSrv.getFilePath(user.image)
-      user.image= "https://firebasestorage.googleapis.com/v0/b/citas-barber-28dfc.appspot.com/o/user_2078.webp?alt=media&token=896ae797-9229-44f0-8b39-27e5da7cac7f"
       await this.firebaseSrv.updateDocument(path, user);
       await this.firebaseSrv.deleteFile(pathImage)
       this.utilsSrv.showToast({
