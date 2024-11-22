@@ -76,7 +76,15 @@ export class CustomInputComponent  implements OnInit {
   }
 
   onPickerChange(event: any) {
-    this.control.setValue(event.detail.value); // Actualizar el formulario con la selección
+    const isoString = event.detail.value; // El valor emitido por ion-datetime (ISO completo)
+    if (isoString) {
+      const date = new Date(isoString);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const formattedTime = this.formatTime(hours, minutes); // Formato HH:mm
+      this.control.setValue(formattedTime); // Actualiza el FormControl con el formato correcto
+      console.log("Hora seleccionada:", formattedTime);
+    }
     this.closePicker();
   }
 
@@ -193,7 +201,7 @@ export class CustomInputComponent  implements OnInit {
 
   // Formato de hora normal (HH:mm)
   formatTime(hours: number, minutes: number): string {
-    return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
 
   // Acepta la hora seleccionada y cierra el selector
