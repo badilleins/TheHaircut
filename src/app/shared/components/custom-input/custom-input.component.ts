@@ -21,7 +21,7 @@ export class CustomInputComponent  implements OnInit {
 
   showDateTime = false;
 
-  selectedTime: number | null = null;
+  selectedTime: string | null = null;
   constructor() { }
 
   ngOnInit() {
@@ -46,31 +46,37 @@ export class CustomInputComponent  implements OnInit {
 
   // Cuando se selecciona una hora
   onTimeSelected(event: any) {
-    const timeString = event.detail.value; // Hora seleccionada en formato ISO
-    const date = new Date(timeString);
+    console.log("Evento recibido:", event);
+    const timeString = event.detail.value;
+    if (timeString) {
+      console.log("Hora seleccionada (ISO): ", timeString);
+      const date = new Date(timeString);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      // Usamos el formato HH:mm
+      this.selectedTime = this.formatTime(hours, minutes);
+      console.log("Hora seleccionada:", this.selectedTime);
+      // Actualizamos el FormControl con el formato adecuado
+      this.control.setValue(this.selectedTime, { emitEvent: true });
+    } else {
+      console.error("No se seleccionó ninguna hora.");
+    }
+  }
 
-    const hours = date.getHours();   // Obtiene las horas
-    const minutes = date.getMinutes(); // Obtiene los minutos
-
-    // Convertimos la hora en formato decimal
-    this.selectedTime = hours + minutes / 60;
-    console.log(this.selectedTime)
-    // Actualizamos el control de formulario con el valor seleccionado
-    this.control.setValue(this.selectedTime);
+  // Formato de hora normal (HH:mm)
+  formatTime(hours: number, minutes: number): string {
+    return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
   }
 
   // Acepta la hora seleccionada y cierra el selector
   acceptTime() {
-    console.log(this.selectedTime)
-    this.control.setValue(this.selectedTime);
-    this.showDateTime = false;
-    // Asegúrate de que el valor formateado se establezca en el control de formulario
-  }
-
-  formatTimeDecimal(time: number) {
-    if (time === null) return '00:00'; // Asegúrate de manejar null
-    const hours = Math.floor(time);
-    const minutes = Math.round((time - hours) * 60); // Redondear los minutos
-    return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`; // Formato HH:MM
+    if (this.selectedTime != null) {
+      console.log("Hora aceptada:", this.selectedTime);
+      // Usamos el formato adecuado y lo pasamos al FormControl
+      this.control.setValue(this.selectedTime, { emitEvent: true });
+      this.showDateTime = false;
+    } else {
+      console.error("No se ha seleccionado ninguna hora");
+    }
   }
 }
