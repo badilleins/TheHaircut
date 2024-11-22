@@ -17,12 +17,19 @@ export class AddUpdateBranchComponent  implements OnInit {
   utilsSrv = inject(UtilsService)
   firebaseSvc = inject(FirebaseService);
 
+
   form = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('',[Validators.required, Validators.minLength(4)]),
     address: new FormControl('',[Validators.required]),
     image : new FormControl('',Validators.required),
-  })
+    hourStart: new FormControl(0,[Validators.required]),
+    hourEnd : new FormControl(0,Validators.required)
+  },
+  {validators:this.validateEndTime
+  }
+
+)
 
   user = {} as User;
 
@@ -135,4 +142,29 @@ export class AddUpdateBranchComponent  implements OnInit {
     }
 
 
+ validateEndTime(formGroup:FormGroup){
+
+  const start = formGroup.get('hourStart')?.value.toString();
+  const end = formGroup.get('hourEnd')?.value.toString();
+
+  const [hours,minutes] = start.split(":").map(Number)
+  const[hours2,minutes2] = end.split(":").map(Number)
+
+  const timeStart = new Date();
+  timeStart.setHours(hours,minutes,0,0)
+
+  const timeEnd =new Date()
+  timeEnd.setHours(hours2,minutes2,0,0)
+
+
+
+  if(start && end && timeStart >=timeEnd){
+    console.log("Entro al 1")
+    formGroup.get('hourEnd')?.setErrors({endTimeInvalid:true});
+
+  }else{
+    formGroup.get('hourEnd')?.setErrors(null)
+  }
+  return null;
+}
 }

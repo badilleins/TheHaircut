@@ -37,7 +37,10 @@
       </div>
 
       <app-custom-input
-        autocomplete="name"
+        [label]="'Dirección de la barbería'"
+        [icon]="'location-outline'"
+        [isPicker]="true"
+        [pickerType]="'address'"
         [control]="form.controls.address"
         type="text"
         label="Dirección">
@@ -48,6 +51,32 @@
         <div *ngIf="form.controls.address.errors?.['required']">La dirección es requerida</div>
         <div *ngIf="form.controls.address.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>
+
+
+      <app-custom-input
+      [isPicker]="true"
+      [pickerType]="'time'"
+      [control]="form.controls.hourStart"
+      label="Hora de inicio">
+    </app-custom-input>
+    <div
+      class="validators"
+     >
+      <div *ngIf="form.controls.hourStart.errors?.['required']">La hora de inicio es requerida</div>
+    </div>
+
+
+ <app-custom-input
+      [isPicker]="true"
+      [pickerType]="'time'"
+      [control]="form.controls.hourEnd"
+      label="Hora de fin">
+    </app-custom-input>
+    <div
+      class="validators">
+      <div *ngIf="form.controls.hourEnd.errors?.['required']">La hora de fin es requerida</div>
+      <div *ngIf="form.controls.hourEnd.errors?.['endTimeInvalid']">La hora de fin debe ser mayor a la hora de inicio.</div>
+    </div>
 
 
 
