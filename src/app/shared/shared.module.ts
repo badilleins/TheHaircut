@@ -22,6 +22,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { AddUpdateHaircutCategoryComponent } from './components/add-update-haircut-category/add-update-haircut-category.component';
 import { AddUpdateProductCategoryComponent } from './components/add-update-product-category/add-update-product-category.component';
 import { DonoughtChartComponent } from './components/donought-chart/donought-chart.component';
+import { MapComponent } from './components/map/map.component';
 
 registerLocaleData(localeEs)
 
@@ -40,6 +41,7 @@ registerLocaleData(localeEs)
     AddUpdateHaircutComponent,
     AddUpdateProductComponent,
     BarChartComponent,
+    MapComponent,
     AddUpdateHaircutCategoryComponent,
     AddUpdateProductCategoryComponent,
     DonoughtChartComponent
@@ -66,7 +68,8 @@ registerLocaleData(localeEs)
     ProductsComponent,
     BarChartComponent,
     AddUpdateProductCategoryComponent,
-    DonoughtChartComponent
+    DonoughtChartComponent,
+    MapComponent
   ]
 })
 export class SharedModule { }

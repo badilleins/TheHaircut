@@ -1,14 +1,25 @@
-<app-header 
-  [isModal]="true" 
+<app-header
+  [isModal]="true"
   [title]="user ? 'Actualizar Cliente' : 'Agregar Cliente'"></app-header>
 
 <ion-content [fullscreen]="true">
   <div class="d-flex-center">
-    <form 
+    <form
       class="auth-form"
       (ngSubmit)="submit()"
       [formGroup]="form"
       (keypres.enter)="submit()">
+
+      <ion-avatar *ngIf="form.value.image">
+        <img [src]="form.value.image" />
+      </ion-avatar>
+      <!-- Si existe o no imagen -->
+      <ion-icon class="image-icon" *ngIf="!form.value.image" name="image-outline"></ion-icon>
+      <br>
+      <!-- botón para tomar imagen -->
+      <ion-button (click)="takeImage()" mode="ios" size="small" shape="round">
+        Tomar/Seleccionar
+      </ion-button>
 
       <!-- Caja de texto para el nombre -->
       <app-custom-input
@@ -18,12 +29,12 @@
         type="text"
         label="Nombre de cliente">
       </app-custom-input>
-      <div 
-        class="validators" 
+      <div
+        class="validators"
         *ngIf="form.controls.name.errors && form.controls.name.touched">
         <div *ngIf="form.controls.name.errors?.['required']">El nombre de cliente es requerido</div>
         <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
-      </div> 
+      </div>
 
       <!-- Caja de texto para el apellido -->
       <app-custom-input
@@ -33,8 +44,8 @@
         type="text"
         label="Apellido de cliente">
       </app-custom-input>
-      <div 
-        class="validators" 
+      <div
+        class="validators"
         *ngIf="form.controls.lastName.errors && form.controls.lastName.touched">
         <div *ngIf="form.controls.lastName.errors?.['required']">El apellido de cliente es requerido</div>
         <div *ngIf="form.controls.lastName.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
@@ -47,14 +58,14 @@
       </ion-list>
 
       <!-- Botón para registrar o actualizar -->
-      <ion-button 
+      <ion-button
         class="ion-margin"
         type="submit"
         mode="ios"
         [disabled]="form.invalid">
         {{user ? 'Actualizar Cliente' : 'Agregar Cliente'}}
         <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
-      </ion-button> 
+      </ion-button>
     </form>
   </div>
 </ion-content>

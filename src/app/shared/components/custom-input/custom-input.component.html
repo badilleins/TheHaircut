@@ -1,54 +1,74 @@
 <ion-item lines="none" class="custom-input">
-  <ion-icon 
-    color="primary" 
+  <ion-icon
+    color="primary"
     *ngIf="icon"
     slot="start"
     [name]="icon">
   </ion-icon>
-  <ion-input 
-  *ngIf="isTimePicker"
-    type="number"
+
+  <!-- Entrada dinámica -->
+  <ion-input
+    *ngIf="isPicker"
+    type="text"
     [label]="label"
     [formControl]="control"
     labelPlacement="floating"
     readonly
-    (click)="openTimePicker()"
-    [value]="selectedTime"
-    placeholder="Selecciona una hora"
-    labelPlacement="floating">
+    (click)="openPicker()"
+    [value]="control.value"
+    [placeholder]="placeholder">
   </ion-input>
-  <ion-input 
-    *ngIf="!isTimePicker"
+
+  <ion-input
+    *ngIf="!isPicker"
     [type]="type"
     [label]="label"
     [autocomplete]="autocomplete"
     [formControl]="control"
     labelPlacement="floating">
   </ion-input>
-  <ion-button 
+
+  <!-- Botón de contraseña opcional -->
+  <ion-button
     *ngIf="isPassword"
-    (click)="showOrHidePassword()" 
-    expand="block" 
-    fill="clear" 
+    (click)="showOrHidePassword()"
+    expand="block"
+    fill="clear"
     shape="round"
     slot="end">
-    <ion-icon 
-      slot="icon-only" 
-      [name]="hide? 'eye-outline' : 'eye-off-outline'">
+    <ion-icon
+      slot="icon-only"
+      [name]="hide ? 'eye-outline' : 'eye-off-outline'">
     </ion-icon>
   </ion-button>
 </ion-item>
 
-<ion-modal [isOpen]="showDateTime" (didDismiss)="closeTimePicker()">
+<!-- Modal dinámico -->
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="closePicker()">
   <ng-template>
-    <ion-datetime 
-      presentation="time"
-      (onchange)="onTimeSelected($event)">
-      <span slot="title">Seleccione la hora de inicio</span>
-      <ion-buttons slot="buttons">
-        <ion-button color="danger" (click)="closeTimePicker()">Cancelar</ion-button>
-        <ion-button color="success" (click)="acceptTime()">Aceptar</ion-button>
-      </ion-buttons>
-    </ion-datetime>
+    <ng-container *ngIf="pickerType === 'time'">
+      <ion-datetime
+        presentation="time"
+        [preferWheel]="true"
+        (ionChange)="onPickerChange($event)"
+        showDefaultButtons="true"
+        cancelText="Cancelar"
+        doneText="Aceptar">
+        <span slot="title">Seleccione la hora</span>
+      </ion-datetime>
+    </ng-container>
+
+    <ng-container *ngIf="pickerType === 'address'">
+      <div class="modal-container">
+        <h2>Selecciona la ubicación</h2>
+        <p *ngIf="isLoading">Obteniendo dirección...</p>
+        <p *ngIf = "userAddress" style="margin-top: 10px">Dirección: {{ userAddress }}</p>
+        <div class="leaflet-container" id="map"></div>
+        <div class="leaflet-container_buttons">
+          <ion-button expand="block" color="primary" (click)="confirmAddress()">Confirmar</ion-button>
+          <ion-button expand="block" color="light" (click)="closePicker()">Cancelar</ion-button>
+        </div>
+      </div>
+    </ng-container>
   </ng-template>
 </ion-modal>

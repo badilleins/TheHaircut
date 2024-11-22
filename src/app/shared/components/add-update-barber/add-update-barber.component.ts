@@ -23,13 +23,16 @@ export class AddUpdateBarberComponent  implements OnInit {
     phone: new FormControl(0,[Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
     email: new FormControl('',[Validators.required, Validators.email]),
     isBarber: new FormControl(true),
-    hourStartAt: new FormControl(7),
-    hourEndAt: new FormControl(22),
+    hourStartAt: new FormControl(0, Validators.required),
+    hourEndAt: new FormControl(0,Validators.required),
     uidBranch: new FormControl(''),
     isAdmin: new FormControl(false),
     isBlocked: new FormControl(false),
     image: new FormControl(''),
-  })
+  },
+  {validators:this.validateEndTime
+  }
+);
 
   userAdmin = {} as User;
 
@@ -89,12 +92,12 @@ export class AddUpdateBarberComponent  implements OnInit {
     }).finally(() => {
       loading.dismiss()
     })
-    
+
 }
 
     private async updateUser() {
       let path = `users/${this.user.uid}`;
-  
+
       const loading = await this.utilsSrv.loading();
       await loading.present();
       try {
@@ -105,14 +108,14 @@ export class AddUpdateBarberComponent  implements OnInit {
           let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
           this.form.controls.image.setValue(imageUrl);
         }
-  
+
         // === Actualizar el documento ===
         await this.firebaseSvc.updateDocument(path, this.form.value);
-  
+
         this.utilsSrv.dismissModal({ success: true });
-  
+
         this.utilsSrv.showToast({
-          message: 'Sucursal actualizada exitosamente',
+          message: 'Barbero actualizado exitosamente',
           duration: 1500,
           color: 'success',
           position: 'middle',
@@ -120,7 +123,7 @@ export class AddUpdateBarberComponent  implements OnInit {
         });
       } catch (error) {
         console.log(error);
-  
+
         this.utilsSrv.showToast({
           message: error.message,
           duration: 2500,
@@ -132,5 +135,32 @@ export class AddUpdateBarberComponent  implements OnInit {
         loading.dismiss();
       }
     }
+
+    validateEndTime(formGroup:FormGroup){
+
+      const start = formGroup.get('hourStartAt')?.value.toString();
+      const end = formGroup.get('hourEndAt')?.value.toString();
+
+      const [hours,minutes] = start.split(":").map(Number)
+      const[hours2,minutes2] = end.split(":").map(Number)
+
+      const timeStart = new Date();
+      timeStart.setHours(hours,minutes,0,0)
+
+      const timeEnd =new Date()
+      timeEnd.setHours(hours2,minutes2,0,0)
+
+
+
+      if(start && end && timeStart >=timeEnd){
+        console.log("Entro al 1")
+        formGroup.get('hourEndAt')?.setErrors({endTimeInvalid:true});
+
+      }else{
+        formGroup.get('hourEndAt')?.setErrors(null)
+      }
+      return null;
+    }
+
 
 }

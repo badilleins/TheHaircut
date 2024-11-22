@@ -13,17 +13,17 @@
         <p>Clientes</p>
       </div>
     </ion-card>
-  
+
     <!-- Listado de citas -->
     <ion-list *ngIf="!loading">
       <ion-item-sliding class="product-item" *ngFor="let p of filteredUsers">
         <ion-item>
           <ion-card mode="ios">
             <ion-card-header>
-              <ion-card-title>{{p.name}}</ion-card-title>
+              <ion-card-title>{{p.name}} {{p.lastName}}</ion-card-title>
               <ion-card-subtitle>Cliente</ion-card-subtitle>
             </ion-card-header>
-          
+
             <ion-card-content>
               <ion-item>
                 <ion-thumbnail slot="start">
@@ -38,27 +38,27 @@
             </ion-card-content>
           </ion-card>
         </ion-item>
-  
+
         <!-- ===== Opciones para cada producto ===== -->
         <ion-item-options>
           <!-- Editar -->
           <ion-item-option (click)="addUpdateClient(p)">
             <ion-icon class="option-btn" name="create-outline"></ion-icon>
           </ion-item-option>
-  
+
           <!-- Eliminar -->
           <ion-item-option (click)="confirmDeleteClient(p)" color="danger">
             <ion-icon class="option-btn" name="trash-outline"></ion-icon>
           </ion-item-option>
-  
+
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
-  
+
      <!-- ====== Cuando no hay productos disponibles ====== -->
      <div *ngIf="!loading && !filteredUsers.length" class="empty">
       <ion-icon  name="shield-outline"></ion-icon>
       <h3>No hay clientes disponibles</h3>
     </div>
-  
+
 </ion-content>
