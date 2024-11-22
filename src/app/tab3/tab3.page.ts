@@ -163,4 +163,9 @@ export class Tab3Page {
     }
     return new File([u8arr], filename, { type: mime });
   }
+
+  logOut() {
+    localStorage.removeItem('user'); 
+    this.utilsSrv.routerLinkNoBack('/')
+  }
 }
