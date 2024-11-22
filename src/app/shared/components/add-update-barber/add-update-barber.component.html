@@ -1,10 +1,10 @@
-<app-header 
-  [isModal]="true" 
+<app-header
+  [isModal]="true"
   [title]="user ? 'Actualizar Barbero' : 'Agregar Barbero'"></app-header>
 
 <ion-content [fullscreen]="true">
   <div class="d-flex-center">
-    <form 
+    <form
       class="auth-form"
       (ngSubmit)="submit()"
       [formGroup]="form"
@@ -28,12 +28,12 @@
         type="text"
         label="Nombre">
       </app-custom-input>
-      <div 
-        class="validators" 
+      <div
+        class="validators"
         *ngIf="form.controls.name.errors && form.controls.name.touched">
         <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
         <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
-      </div> 
+      </div>
 
       <!-- Caja de texto para el apellido -->
       <app-custom-input
@@ -42,8 +42,8 @@
         type="text"
         label="Apellido">
       </app-custom-input>
-      <div 
-        class="validators" 
+      <div
+        class="validators"
         *ngIf="form.controls.lastName.errors && form.controls.lastName.touched">
         <div *ngIf="form.controls.lastName.errors?.['required']">El apellido es requerido</div>
         <div *ngIf="form.controls.lastName.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
@@ -55,24 +55,24 @@
         </ion-buttons>
       </ion-datetime> -->
       <app-custom-input
-        [isTimePicker]="true"
+        [isPicker]="true"
         [control]="form.controls.hourStartAt"
         label="Hora de inicio">
       </app-custom-input>
-      <div 
-        class="validators" 
+      <div
+        class="validators"
         *ngIf="form.controls.hourStartAt.errors && form.controls.hourStartAt.touched">
         <div *ngIf="form.controls.hourStartAt.errors?.['required']">La hora de inicio es requerida</div>
       </div>
       <!-- Botón para registrar o actualizar -->
-      <ion-button 
+      <ion-button
         class="ion-margin"
         type="submit"
         mode="ios"
         [disabled]="form.invalid">
         {{user ? 'Actualizar Barbero' : 'Agregar Barbero'}}
         <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
-      </ion-button> 
+      </ion-button>
     </form>
   </div>
 </ion-content>

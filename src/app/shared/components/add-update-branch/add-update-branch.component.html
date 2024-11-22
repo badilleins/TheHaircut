@@ -1,10 +1,10 @@
-<app-header 
-  [isModal]="true" 
+<app-header
+  [isModal]="true"
   [title]="branch ? 'Actualizar Sucursal' : 'Agregar Sucursal'"></app-header>
 
 <ion-content [fullscreen]="true">
   <div class="d-flex-center">
-    <form 
+    <form
       class="auth-form"
       (ngSubmit)="submit()"
       [formGroup]="form"
@@ -29,35 +29,66 @@
         type="text"
         label="Nombre">
       </app-custom-input>
-      <div 
-        class="validators" 
+      <div
+        class="validators"
         *ngIf="form.controls.name.errors && form.controls.name.touched">
         <div *ngIf="form.controls.name.errors?.['required']">El nombre es requerido</div>
         <div *ngIf="form.controls.name.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
-      </div> 
-      
+      </div>
+
       <app-custom-input
-        autocomplete="name"
+        [label]="'Dirección de la barbería'"
+        [icon]="'location-outline'"
+        [isPicker]="true"
+        [pickerType]="'address'"
         [control]="form.controls.address"
         type="text"
         label="Dirección">
       </app-custom-input>
-      <div 
-        class="validators" 
+      <div
+        class="validators"
         *ngIf="form.controls.address.errors && form.controls.address.touched">
         <div *ngIf="form.controls.address.errors?.['required']">La dirección es requerida</div>
         <div *ngIf="form.controls.address.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>
-      
+
+
+      <app-custom-input
+      [isPicker]="true"
+      [pickerType]="'time'"
+      [control]="form.controls.hourStart"
+      label="Hora de inicio">
+    </app-custom-input>
+    <div
+      class="validators"
+     >
+      <div *ngIf="form.controls.hourStart.errors?.['required']">La hora de inicio es requerida</div>
+    </div>
+
+
+ <app-custom-input
+      [isPicker]="true"
+      [pickerType]="'time'"
+      [control]="form.controls.hourEnd"
+      label="Hora de fin">
+    </app-custom-input>
+    <div
+      class="validators">
+      <div *ngIf="form.controls.hourEnd.errors?.['required']">La hora de fin es requerida</div>
+      <div *ngIf="form.controls.hourEnd.errors?.['endTimeInvalid']">La hora de fin debe ser mayor a la hora de inicio.</div>
+    </div>
+
+
+
       <!-- Botón para registrar o actualizar -->
-      <ion-button 
+      <ion-button
         class="ion-margin"
         type="submit"
         mode="ios"
         [disabled]="form.invalid">
         {{branch ? 'Actualizar Sucursal' : 'Agregar Sucursal'}}
         <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
-      </ion-button> 
+      </ion-button>
     </form>
   </div>
 </ion-content>

@@ -17,12 +17,19 @@ export class AddUpdateBranchComponent  implements OnInit {
   utilsSrv = inject(UtilsService)
   firebaseSvc = inject(FirebaseService);
 
+
   form = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('',[Validators.required, Validators.minLength(4)]),
     address: new FormControl('',[Validators.required]),
     image: new FormControl('',[Validators.required]),
-  })
+    hourStart: new FormControl(0,[Validators.required]),
+    hourEnd : new FormControl(0,Validators.required)
+  },
+  {validators:this.validateEndTime
+  }
+
+)
 
   user = {} as User;
 
@@ -94,10 +101,10 @@ export class AddUpdateBranchComponent  implements OnInit {
 
     private async updateBranch() {
       let path = `users/${this.user.uid}/branchs/${this.branch.id}`;
-  
+
       const loading = await this.utilsSrv.loading();
       await loading.present();
-  
+
       try {
         // === Subir la nueva imagen si ha sido modificada ===
         if (this.form.value.image !== this.branch.image) {
@@ -106,12 +113,12 @@ export class AddUpdateBranchComponent  implements OnInit {
           let imageUrl = await this.firebaseSvc.uploadImage(imagePath, dataUrl);
           this.form.controls.image.setValue(imageUrl);
         }
-  
+
         // === Actualizar el documento ===
         await this.firebaseSvc.updateDocument(path, this.form.value);
-  
+
         this.utilsSrv.dismissModal({ success: true });
-  
+
         this.utilsSrv.showToast({
           message: 'Sucursal actualizada exitosamente',
           duration: 1500,
@@ -121,7 +128,7 @@ export class AddUpdateBranchComponent  implements OnInit {
         });
       } catch (error) {
         console.log(error);
-  
+
         this.utilsSrv.showToast({
           message: error.message,
           duration: 2500,
@@ -134,4 +141,30 @@ export class AddUpdateBranchComponent  implements OnInit {
       }
     }
 
+
+ validateEndTime(formGroup:FormGroup){
+
+  const start = formGroup.get('hourStart')?.value.toString();
+  const end = formGroup.get('hourEnd')?.value.toString();
+
+  const [hours,minutes] = start.split(":").map(Number)
+  const[hours2,minutes2] = end.split(":").map(Number)
+
+  const timeStart = new Date();
+  timeStart.setHours(hours,minutes,0,0)
+
+  const timeEnd =new Date()
+  timeEnd.setHours(hours2,minutes2,0,0)
+
+
+
+  if(start && end && timeStart >=timeEnd){
+    console.log("Entro al 1")
+    formGroup.get('hourEnd')?.setErrors({endTimeInvalid:true});
+
+  }else{
+    formGroup.get('hourEnd')?.setErrors(null)
+  }
+  return null;
+}
 }

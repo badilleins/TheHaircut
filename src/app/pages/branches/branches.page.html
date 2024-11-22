@@ -14,7 +14,7 @@
         <p>Sucursales</p>
       </div>
     </ion-card>
-  
+
     <!-- Listado de citas -->
     <ion-list *ngIf="!loading">
       <ion-item-sliding class="product-item" *ngFor="let p of filteredBranchs">
@@ -25,35 +25,37 @@
               <ion-card-title>{{p.name}}</ion-card-title>
               <ion-card-subtitle>Sucursal</ion-card-subtitle>
             </ion-card-header>
-          
+
             <ion-card-content>
-              Ubicación: {{p.address}}
+              <p>Ubicación: {{p.address}}</p>
+              <p>Hora de apertura: {{p.hourStart}}</p>
+              <p> Hora de cierre: {{p.hourEnd}}</p>
             </ion-card-content>
           </ion-card>
         </ion-item>
-  
+
         <!-- ===== Opciones para cada producto ===== -->
         <ion-item-options>
           <!-- Editar -->
           <ion-item-option (click)="addUpdateBranch(p)">
             <ion-icon class="option-btn" name="create-outline"></ion-icon>
           </ion-item-option>
-  
+
           <!-- Eliminar -->
           <ion-item-option (click)="confirmDeleteBranch(p)" color="danger">
             <ion-icon class="option-btn" name="trash-outline"></ion-icon>
           </ion-item-option>
-  
+
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
-  
+
      <!-- ====== Cuando no hay productos disponibles ====== -->
      <div *ngIf="!loading && !filteredBranchs.length" class="empty">
       <ion-icon  name="shield-outline"></ion-icon>
       <h3>No hay sucursales disponibles</h3>
     </div>
-  
+
     <!-- Botón para cargar formulario modal -->
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button (click)="addUpdateBranch()">
