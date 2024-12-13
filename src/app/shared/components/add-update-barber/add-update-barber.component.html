@@ -64,6 +64,7 @@
       </div>
             <!-- Input hora de fin -->
     <app-custom-input
+      icon="time"
       [isPicker]="true"
       [control]="form.controls.hourEndAt"
       label="Hora de fin">
@@ -73,6 +74,10 @@
       <div *ngIf="form.controls.hourEndAt.errors?.['required']">La hora de fin es requerida</div>
       <div *ngIf="form.controls.hourEndAt.errors?.['endTimeInvalid']">La hora de fin debe ser mayor a la hora de inicio.</div>
     </div>
+    
+    <ion-select fill="outline" class="select" label="Sucursal" interface="modal"  okTemodalxt="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChange($event)">
+      <ion-select-option *ngFor="let p of branchs" [value]="p.id">{{"Sucursal: "+p.name + " - Dirección: " + p.address}}</ion-select-option>
+    </ion-select>
       <!-- Botón para registrar o actualizar -->
       <ion-button
         class="ion-margin"

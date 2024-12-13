@@ -23,6 +23,8 @@ import { AddUpdateHaircutCategoryComponent } from './components/add-update-hairc
 import { AddUpdateProductCategoryComponent } from './components/add-update-product-category/add-update-product-category.component';
 import { DonoughtChartComponent } from './components/donought-chart/donought-chart.component';
 import { MapComponent } from './components/map/map.component';
+import { AddUpdateAppointmentClientComponent } from './components/add-update-appointment-client/add-update-appointment-client.component';
+import { CalendarClientComponent } from './components/calendar-client/calendar-client.component';
 
 registerLocaleData(localeEs)
 
@@ -44,7 +46,9 @@ registerLocaleData(localeEs)
     MapComponent,
     AddUpdateHaircutCategoryComponent,
     AddUpdateProductCategoryComponent,
-    DonoughtChartComponent
+    DonoughtChartComponent,
+    AddUpdateAppointmentClientComponent,
+    CalendarClientComponent
   ],
   imports: [
     CommonModule,

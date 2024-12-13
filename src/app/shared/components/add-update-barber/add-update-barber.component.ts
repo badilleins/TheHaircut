@@ -1,5 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Branch } from 'src/app/models/branch.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -16,6 +17,8 @@ export class AddUpdateBarberComponent  implements OnInit {
   utilsSrv = inject(UtilsService)
   firebaseSvc = inject(FirebaseService);
 
+  branchs: Branch[]=[]
+
   form = new FormGroup({
     uid: new FormControl(''),
     name: new FormControl('',[Validators.required, Validators.minLength(4)]),
@@ -25,7 +28,7 @@ export class AddUpdateBarberComponent  implements OnInit {
     isBarber: new FormControl(true),
     hourStartAt: new FormControl(0, Validators.required),
     hourEndAt: new FormControl(0,Validators.required),
-    uidBranch: new FormControl(''),
+    uidBranch: new FormControl(null,Validators.required),
     isAdmin: new FormControl(false),
     isBlocked: new FormControl(false),
     image: new FormControl(''),
@@ -40,6 +43,7 @@ export class AddUpdateBarberComponent  implements OnInit {
 
   ngOnInit() {
     this.userAdmin = this.utilsSrv.getFromLocalStorage('user');
+    this.getBranchs()
     if (this.user) this.form.setValue(this.user);
   }
 
@@ -122,8 +126,6 @@ export class AddUpdateBarberComponent  implements OnInit {
           icon: 'checkmark-circle-outline',
         });
       } catch (error) {
-        console.log(error);
-
         this.utilsSrv.showToast({
           message: error.message,
           duration: 2500,
@@ -162,5 +164,17 @@ export class AddUpdateBarberComponent  implements OnInit {
       return null;
     }
 
+    selectOnChange(event){
+      this.form.controls.uidBranch.setValue(event.detail.value)
+    }
+
+    async getBranchs() {
+      let path = `branchs`;
+      this.firebaseSvc.getCollectionData(path).subscribe({
+        next: (res: any) => {
+          this.branchs = res
+        }
+      })
+    }
 
 }
