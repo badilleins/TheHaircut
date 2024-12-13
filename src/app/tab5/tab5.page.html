@@ -20,14 +20,28 @@
     <!-- Segunda fila -->
     <ion-row>
       <ion-col size-md="12" size-lg="12" size="12">
+        <ion-segment [(ngModel)]="selectedSegment">
+
+          <ion-segment-button value="citas">
+            <ion-label>Número de Citas</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="cortes">
+            <ion-label>Número de Cortes</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+      </ion-row>
+
+      <ion-row>
+
+      </ion-row>
+      <ion-col>
+        <ng-container *ngIf="selectedSegment ==='citas'">
           <app-bar-chart></app-bar-chart>
+        </ng-container>
+        <ng-container *ngIf="selectedSegment === 'cortes'">
+          <app-donought-chart></app-donought-chart>
+        </ng-container>
       </ion-col>
-      <ion-col size-md="12" size-lg="12" size="12">
-        <app-donought-chart></app-donought-chart>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      
-    </ion-row>
-  </ion-grid>
+    </ion-grid>
 </ion-content>

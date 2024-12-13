@@ -39,6 +39,7 @@ export class BarChartComponent implements OnInit{
   // Opciones de configuración del gráfico
   public chartOptions: ChartConfiguration['options'] = {
     responsive: true,
+    maintainAspectRatio:true
   };
 
   ngOnInit(): void {
@@ -61,7 +62,7 @@ export class BarChartComponent implements OnInit{
   //       console.log(this.users)
   //     }
   //   })
-  
+
  }
 
 }

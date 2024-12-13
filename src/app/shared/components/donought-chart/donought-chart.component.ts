@@ -33,6 +33,7 @@ export class DonoughtChartComponent  implements OnInit {
   // Opciones de configuración del gráfico
   public chartOptions: ChartConfiguration['options'] = {
     responsive: true,
+    maintainAspectRatio:false
   };
 
   ngOnInit(): void {
@@ -55,7 +56,7 @@ export class DonoughtChartComponent  implements OnInit {
   //       console.log(this.users)
   //     }
   //   })
-  
+
  }
 
 }
