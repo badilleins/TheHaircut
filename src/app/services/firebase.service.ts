@@ -5,7 +5,6 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   updateProfile,
-  deleteUser,
   sendPasswordResetEmail
 } from 'firebase/auth'
 import { AngularFirestore } from '@angular/fire/compat/firestore'

@@ -10,7 +10,7 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./custom-input.component.scss'],
 })
 export class CustomInputComponent  implements OnInit {
-
+  @Input() isDisabled:boolean=false
   @Input() icon!:string
   @Input() type!:string
   @Input() label!:string
@@ -48,6 +48,14 @@ export class CustomInputComponent  implements OnInit {
     if (this.isModalOpen) {
       this.initializeMap();
       this.cdr.detectChanges(); // Detectamos cambios para asegurarnos que el DOM esté listo
+    }
+  }
+
+  ngOnChanges() {
+    if (this.isDisabled) {
+      this.control.disable({ emitEvent: false });
+    } else {
+      this.control.enable({ emitEvent: false });
     }
   }
 
