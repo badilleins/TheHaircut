@@ -32,6 +32,8 @@ import {
   deleteObject
 }  from 'firebase/storage'
 import { User } from '../models/user.model';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { Notification } from '../models/notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -135,6 +137,29 @@ export class FirebaseService {
         // Actualizar el almacenamiento local con los nuevos datos
         this.utilsSrv.saveInLocalStorage('user', userData)
       }
+    });
+  }
+
+  listenToNotificationsChanges() {
+    const notificationsRef = collection(this.db, "users/" + getAuth().currentUser.uid + "/notifications");
+  
+    // Suscribirse a los cambios de la colección
+    onSnapshot(notificationsRef, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+          const notification = change.doc.data() as Notification;
+  
+          // Mostrar notificación local
+          LocalNotifications.schedule({
+            notifications: [
+              {
+                id: Math.floor(Math.random() * 10000), // ID único para la notificación
+                title: "Nueva notificación",
+                body: notification.message || "Tienes una nueva notificación.",
+                schedule: { at: new Date() } // Muestra la notificación inmediatamente
+              }
+            ]
+          });
+      });
     });
   }
 

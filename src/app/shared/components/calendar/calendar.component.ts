@@ -11,6 +11,7 @@ import { AddUpdateAppointmentComponent } from '../add-update-appointment/add-upd
 import { orderBy, where } from 'firebase/firestore';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { AddUpdateAppointmentClientComponent } from '../add-update-appointment-client/add-update-appointment-client.component';
+import { Notification } from 'src/app/models/notification.model';
 
 @Component({
   selector: 'app-calendar',
@@ -303,15 +304,38 @@ export class CalendarComponent  implements OnInit, OnDestroy {
       });
       return;
     }  
+    
     // Actualizar la cita con las nuevas fechas
     const appointmentToUpdate = this.appointments.find((a) => a.id === event.id);
     if (appointmentToUpdate) {
+      const notification: Notification ={
+        message: `El barbero ${appointmentToUpdate.barber.name} ${appointmentToUpdate.barber.lastName} ha movido la cita programada para la fecha: ${appointmentToUpdate.date} a la fecha: ${newStart}`,
+        date: new Date(),
+        type: 2
+      }
       appointmentToUpdate.date = newStart;
       appointmentToUpdate.endDate = newEnd;
       appointmentToUpdate.status = 2
       let path = `appointments/${appointmentToUpdate.id}`
+      let pathNotification= `users/${appointmentToUpdate.client.uid}/notifications`
       try {
         this.firebaseSrv.updateDocument(path, appointmentToUpdate);
+        this.firebaseSrv.addDocument(pathNotification, notification).then(async res => {
+          const docId = res.id;
+          await this.firebaseSrv.updateDocument(`${pathNotification}/${docId}`, { id: docId });
+          this.utilsSrv.dismissModal({ success: true });
+        }).catch(error => {
+          console.log(error);
+      
+          this.utilsSrv.showToast({
+            message: error.message,
+            duration: 2500,
+            color: 'primary',
+            position: 'middle',
+            icon: 'alert-circle-outline'
+          })
+      
+        })
         this.getAppointments();
         this.utilsSrv.showToast({
           message: 'Cita movida exitosamente',
@@ -332,6 +356,4 @@ export class CalendarComponent  implements OnInit, OnDestroy {
       
     }
   }
-  
-
 }

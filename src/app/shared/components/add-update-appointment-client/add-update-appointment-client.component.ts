@@ -8,6 +8,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { CalendarClientComponent } from '../calendar-client/calendar-client.component';
 import { addMinutes } from 'date-fns';
+import { Notification } from 'src/app/models/notification.model';
 
 @Component({
   selector: 'app-add-update-appointment-client',
@@ -83,12 +84,11 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
     
     this.form.controls.barber.setValue(this.barber)
     this.form.controls.endDate.setValue(addMinutes(this.form.controls.date.value, 59))
-    console.log(this.form.controls)
     this.firebaseSvc.addDocument(path, this.form.value).then(async res => {
       const docId = res.id; // ID generado por Firebase
       await this.firebaseSvc.updateDocument(`${path}/${docId}`, { id: docId });
       this.utilsSrv.dismissModal({ success: true });
-
+      await this.createNotificationCreateAppointment(this.barber)
       this.utilsSrv.showToast({
         message: 'Cita agendada exitosamente',
         duration: 1500,
@@ -143,6 +143,7 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
     
     this.form.controls.status.setValue(1)
     this.firebaseSvc.updateDocument(path, this.form.value).then(async res => {
+    await this.createNotificationFinishAppointment();  
       this.utilsSrv.dismissModal({ success: true });
 
       this.utilsSrv.showToast({
@@ -235,6 +236,7 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
   
       try {
         await this.firebaseSvc.deleteDocument(path);
+        await this.createNotificationDeleteAppointment();
         this.utilsSrv.showToast({
           message: 'Cita eliminada exitosamente',
           duration: 1500,
@@ -255,4 +257,97 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
         loading.dismiss();
       }
     }
+
+  async createNotificationDeleteAppointment() {
+    let path = `users/${this.appointmentEdit.client.uid}/notifications`
+
+    const loading = await this.utilsSrv.loading();
+    await loading.present();
+
+    const notification: Notification ={
+      message: `El barbero ${this.appointmentEdit.barber.name} ${this.appointmentEdit.barber.lastName} ha eliminado la cita programada para la fecha: ${this.appointmentEdit.date}`,
+      date: new Date(),
+      type: 0
+    }
+    this.firebaseSvc.addDocument(path, notification).then(async res => {
+      const docId = res.id;
+      await this.firebaseSvc.updateDocument(`${path}/${docId}`, { id: docId });
+      this.utilsSrv.dismissModal({ success: true });
+    }).catch(error => {
+      console.log(error);
+
+      this.utilsSrv.showToast({
+        message: error.message,
+        duration: 2500,
+        color: 'primary',
+        position: 'middle',
+        icon: 'alert-circle-outline'
+      })
+
+    }).finally(() => {
+      loading.dismiss();
+    })
+}
+
+async createNotificationCreateAppointment(barber: User) {
+  let path = `users/${barber.uid}/notifications`
+
+  const loading = await this.utilsSrv.loading();
+  await loading.present();
+
+  const notification: Notification ={
+    message: `El cliente ${this.user.name} ${this.user.lastName} ha agendado una cita para la fecha: ${this.form.controls.date.value}`,
+    date: new Date(),
+    type: 3
+  }
+  this.firebaseSvc.addDocument(path, notification).then(async res => {
+    const docId = res.id;
+    await this.firebaseSvc.updateDocument(`${path}/${docId}`, { id: docId });
+    this.utilsSrv.dismissModal({ success: true });
+  }).catch(error => {
+    console.log(error);
+
+    this.utilsSrv.showToast({
+      message: error.message,
+      duration: 2500,
+      color: 'primary',
+      position: 'middle',
+      icon: 'alert-circle-outline'
+    })
+
+  }).finally(() => {
+    loading.dismiss();
+  })
+}
+
+async createNotificationFinishAppointment() {
+  let path = `users/${this.appointmentEdit.client.uid}/notifications`
+
+  const loading = await this.utilsSrv.loading();
+  await loading.present();
+
+  const notification: Notification ={
+    message: `El barbero ${this.appointmentEdit.barber.name} ${this.appointmentEdit.barber.lastName} ha finalizado la cita programada para la fecha: ${this.appointmentEdit.date}`,
+    date: new Date(),
+    type: 1
+  }
+  this.firebaseSvc.addDocument(path, notification).then(async res => {
+    const docId = res.id;
+    await this.firebaseSvc.updateDocument(`${path}/${docId}`, { id: docId });
+    this.utilsSrv.dismissModal({ success: true });
+  }).catch(error => {
+    console.log(error);
+
+    this.utilsSrv.showToast({
+      message: error.message,
+      duration: 2500,
+      color: 'primary',
+      position: 'middle',
+      icon: 'alert-circle-outline'
+    })
+
+  }).finally(() => {
+    loading.dismiss();
+  })
+}
 }
