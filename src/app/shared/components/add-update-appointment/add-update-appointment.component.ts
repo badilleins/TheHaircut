@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Appointment } from 'src/app/models/appointment.model';
+import { Notification } from 'src/app/models/notification.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -250,5 +251,4 @@ export class AddUpdateAppointmentComponent  implements OnInit {
         loading.dismiss();
       })
     }
-
 }
