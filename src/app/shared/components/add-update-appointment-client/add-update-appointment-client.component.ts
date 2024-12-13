@@ -6,7 +6,6 @@ import { Branch } from 'src/app/models/branch.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { CalendarClientComponent } from '../calendar-client/calendar-client.component';
 import { addMinutes } from 'date-fns';
 import { Notification } from 'src/app/models/notification.model';
 
@@ -18,7 +17,7 @@ import { Notification } from 'src/app/models/notification.model';
 export class AddUpdateAppointmentClientComponent  implements OnInit {
 
   utilsSrv = inject(UtilsService)
-  firebaseSvc = inject(FirebaseService);
+  firebaseSvc = inject(FirebaseService)
   branchs: Branch[]=[]
   barbers: User[]=[]
   uidBranch: string;
@@ -206,7 +205,6 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
     dateSelected(selectedDate: Date): void {
       this.form.controls.date.setValue(selectedDate)
     }
-
 
     confirmDeleteAppointment() {
       this.utilsSrv.presentAlert({
