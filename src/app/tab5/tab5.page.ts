@@ -17,6 +17,7 @@ export class Tab5Page implements OnInit {
   firebaseSrv = inject(FirebaseService)
   loading:boolean = false;
   users: User[] = []
+  selectedSegment:string = 'citas'
 
 
   ngOnInit() {
@@ -26,11 +27,11 @@ export class Tab5Page implements OnInit {
   async getBarbers() {
       let path = `users`;
       this.loading = true;
-  
+
       let query = [
         where("isBarber", "==", true)
       ]
-  
+
       let sub = this.firebaseSrv.getCollectionData(path,query).subscribe({
         next: (res: any) => {
           this.users= res

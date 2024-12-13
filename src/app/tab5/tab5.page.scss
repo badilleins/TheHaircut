@@ -9,3 +9,15 @@
   ion-card-content{
     text-align: center;
   }
+
+  ion-segment {
+    margin: 16px 0;
+  }
+
+  ion-segment-button {
+    --indicator-color: #3880ff; /* Cambiar color del indicador */
+  }
+
+  ion-card {
+    text-align: center;
+  }
