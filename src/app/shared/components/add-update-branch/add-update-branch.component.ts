@@ -58,7 +58,7 @@ export class AddUpdateBranchComponent  implements OnInit {
 
   // ======== Crear Branch =======
   async createBranch() {
-    let path = `users/${this.user.uid}/branchs`
+    let path = `branchs`
 
     const loading = await this.utilsSrv.loading();
     await loading.present();
@@ -72,7 +72,8 @@ export class AddUpdateBranchComponent  implements OnInit {
     delete this.form.value.id
 
     this.firebaseSvc.addDocument(path, this.form.value).then(async res => {
-
+      const docId = res.id; // ID generado por Firebase
+      await this.firebaseSvc.updateDocument(`${path}/${docId}`, { id: docId });
       this.utilsSrv.dismissModal({ success: true });
 
       this.utilsSrv.showToast({
@@ -100,7 +101,7 @@ export class AddUpdateBranchComponent  implements OnInit {
 }
 
     private async updateBranch() {
-      let path = `users/${this.user.uid}/branchs/${this.branch.id}`;
+      let path = `branchs/${this.branch.id}`;
 
       const loading = await this.utilsSrv.loading();
       await loading.present();

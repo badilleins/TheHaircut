@@ -11,10 +11,6 @@
         <h5>{{appointments.length}}</h5>
         <p>Citas</p>
       </div>
-      <div>
-        <h5>{{ getProfits() | currency: 'USD'}}</h5>
-        <p>Ganancias</p>
-      </div>
     </ion-card>
   
     <!-- Listado de citas -->
@@ -27,34 +23,31 @@
               <strong>Hora:</strong> {{p.date | date : 'shortTime'}} <strong *ngIf="p.date.getHours()<12">AM</strong> <strong *ngIf="p.date.getHours()>12">PM</strong><br>
             </div>
             <div class="data">
-              <strong>Precio:</strong> {{p.price | currency: 'USD'}} <br>
+              <strong>Barbero: {{p.barber.name +" - "+ p.barber.phone}}</strong><br>
             </div>
-            <ion-chip color="primary" mode="ios" outline="true">
-              <ion-label>Estado: <strong *ngIf="p.status===0">Pendiente</strong></ion-label>
+            <ion-chip color="success" mode="ios" outline="true" *ngIf="p.status===0">
+              <ion-label>Estado: Pendiente</ion-label>
+            </ion-chip>
+            <ion-chip color="warning" mode="ios" outline="true" *ngIf="p.status===1">
+              <ion-label>Estado: Finalizado</ion-label>
+            </ion-chip>
+            <ion-chip color="danger" mode="ios" outline="true" *ngIf="p.status===2">
+              <ion-label>Estado: Movida - Pendiente</ion-label>
             </ion-chip>
           </ion-label>
         </ion-item>
   
-        <!-- ===== Opciones para cada producto ===== -->
-        <ion-item-options>
-          <!-- Editar -->
-          <ion-item-option (click)="addUpdateAppointment()">
-            <ion-icon class="option-btn" name="create-outline"></ion-icon>
-          </ion-item-option>
-  
-          <!-- Eliminar -->
+        <ion-item-options *ngIf="p.status !== 1">
           <ion-item-option (click)="confirmDeleteAppointment(p)" color="danger">
             <ion-icon class="option-btn" name="trash-outline"></ion-icon>
           </ion-item-option>
-  
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
   
-     <!-- ====== Cuando no hay productos disponibles ====== -->
-     <div *ngIf="!loading && !appointments.length && !user().isBarber" class="empty">
+    <div *ngIf="!loading && !appointments.length && !user().isBarber" class="empty">
       <ion-icon  name="shield-outline"></ion-icon>
-      <h3>No hay productos disponibles</h3>
+      <h3>No hay citas pendientes disponibles</h3>
     </div>
   
     <!-- Botón para cargar formulario modal -->

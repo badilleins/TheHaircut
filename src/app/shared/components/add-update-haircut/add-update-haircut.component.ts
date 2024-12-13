@@ -125,8 +125,6 @@ export class AddUpdateHaircutComponent  implements OnInit {
           icon: 'checkmark-circle-outline',
         });
       } catch (error) {
-        console.log(error);
-  
         this.utilsSrv.showToast({
           message: error.message,
           duration: 2500,

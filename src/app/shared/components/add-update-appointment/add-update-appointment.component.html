@@ -1,6 +1,6 @@
-<app-header 
+<app-header
   [isModal]="true" 
-  [title]="appointment.id ? 'Actualizar Cita' : 'Agregar Cita'"></app-header>
+  [title]="appointmentEdit ? 'Actualizar Cita' : 'Agregar Cita'"></app-header>
 
 <ion-content [fullscreen]="true">
   <div class="d-flex-center">
@@ -27,7 +27,7 @@
       </div>   
       <app-custom-input
         icon="person-add"
-        autocomplete="name"
+        autocomplete="lastName"
         [control]="form.controls.lastName"
         type="text"
         label="Apellido">
@@ -38,42 +38,47 @@
         <div *ngIf="form.controls.lastName.errors?.['required']">El apellido es requerido</div>
         <div *ngIf="form.controls.lastName.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
       </div>   
-
-      <app-custom-input
-        icon="calendar"
-        autocomplete="name"
-        [control]="form.controls.date"
-        type="text"
-        label="Fecha">
-      </app-custom-input>
-
-      <div 
-        class="validators" 
-        *ngIf="form.controls.date.errors && form.controls.date.touched">
-        <div *ngIf="form.controls.date.errors?.['required']">La fecha es requerida</div>
-        <div *ngIf="form.controls.date.errors?.['minlength']">Ingrese al menos 4 caracteres</div>
-      </div>   
-      <app-custom-input
-        icon="cash"
-        [control]="form.controls.price"
-        type="number"
-        label="Precio">
-      </app-custom-input>
-      <div 
-        class="validators" 
-        *ngIf="form.controls.price.errors && form.controls.price.touched">
-        <div *ngIf="form.controls.price.errors?.['required']">El precio es requerido</div>
-        <div *ngIf="form.controls.price.errors?.['min']">El precio mínimo debe ser cero</div>
-      </div>
-
+      <ion-item>
+        <ion-label>Fecha: {{this.form.controls.date.value}}</ion-label>
+      </ion-item>
       <!-- Botón para registrar o actualizar -->
       <ion-button 
         class="ion-margin"
         type="submit"
         mode="ios"
-        [disabled]="form.invalid">
-        {{appointment.id ? 'Actualizar Cita' : 'Agregar Cita'}}
+        [disabled]="form.invalid"
+        *ngIf="!appointmentEdit">
+        Agregar Cita
         <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button> 
+      <ion-button 
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid"
+        *ngIf="appointmentEdit && appointmentEdit.status!==1">
+        Actualizar Cita
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button> 
+      <ion-button 
+        class="ion-margin"
+        mode="ios"
+        [disabled]="form.invalid"
+        (click)="confirmFinishAppointment()"
+        *ngIf="appointmentEdit && appointmentEdit.status!==1"
+        color="warning">
+        Finalizar Cita
+        <ion-icon slot="end" name="thumbs-up"></ion-icon>
+      </ion-button> 
+      <ion-button 
+        class="ion-margin"
+        mode="ios"
+        [disabled]="form.invalid"
+        (click)="confirmDeleteAppointment()"
+        *ngIf="appointmentEdit && appointmentEdit.status!==1"
+        color="danger">
+        Eliminar Cita
+        <ion-icon slot="end" name="trash"></ion-icon>
       </ion-button> 
     </form>
   </div>

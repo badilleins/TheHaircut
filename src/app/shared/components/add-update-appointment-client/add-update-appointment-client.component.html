@@ -1,0 +1,84 @@
+<app-header
+  [isModal]="true" 
+  [title]="appointmentEdit? 'Actualizar Cita' : 'Agregar Cita'"></app-header>
+
+<ion-content [fullscreen]="true">
+  <div class="d-flex-center">
+    <form 
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()"
+      *ngIf="!appointmentEdit">
+      
+      <ion-list>
+        <ion-item>
+          <ion-label>Nombre: {{this.form.controls.name.value}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Apellido: {{this.form.controls.lastName.value}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fecha: {{this.form.controls.date.value}}</ion-label>
+        </ion-item>
+      </ion-list>
+         
+
+      <ion-select fill="outline" class="select" label="Sucursal" interface="modal"  okTemodalxt="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChange($event)">
+        <ion-select-option *ngFor="let p of branchs" [value]="p.id">{{"Sucursal: "+p.name + " - Dirección: " + p.address}}</ion-select-option>
+      </ion-select>
+
+      <ion-select fill="outline" class="select" label="Barbero" interface="modal"  okTemodalxt="Aceptar" cancelText="Cancelar" (ionChange)="selectOnChangeBarbers($event)">
+        <ion-select-option *ngFor="let p of barbers" [value]="p">{{"Barbero: "+p.name}}</ion-select-option>
+      </ion-select>
+
+      <app-calendar-client [barber]="barber" *ngIf="barber" (dateSelected)="dateSelected($event)"></app-calendar-client>
+      <!-- Botón para registrar o actualizar -->
+      <ion-button 
+        class="ion-margin"
+        type="submit"
+        mode="ios"
+        [disabled]="form.invalid">
+        Agregar Cita
+        <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+      </ion-button>  
+    </form>
+
+    <form 
+      class="auth-form"
+      (ngSubmit)="submit()"
+      [formGroup]="form"
+      (keypres.enter)="submit()"
+      *ngIf="appointmentEdit">
+      <ion-list *ngIf="appointmentEdit">
+        <ion-item>
+          <ion-label>Nombre: {{this.form.controls.name.value}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Apellido: {{this.form.controls.lastName.value}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Fecha: {{this.form.controls.date.value}}</ion-label>
+        </ion-item>
+      </ion-list>
+  
+        <ion-button 
+          class="ion-margin"
+          type="submit"
+          mode="ios"
+          *ngIf="appointmentEdit && appointmentEdit.status!==1">
+          Finalizar Cita
+          <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+        </ion-button>
+        <ion-button 
+          class="ion-margin"
+          mode="ios"
+          *ngIf="appointmentEdit && appointmentEdit.status!==1"
+          color="danger"
+          (click)="confirmDeleteAppointment()">
+          Eliminar Cita
+          <ion-icon slot="end" name="trash"></ion-icon>
+        </ion-button>  
+      </form>
+  </div>
+</ion-content>

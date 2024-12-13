@@ -15,8 +15,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { registerLocaleData } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-
-import { NgChartsConfiguration } from 'ng2-charts';
+import { LocalNotifications } from '@capacitor/local-notifications';
+LocalNotifications.requestPermissions();
 registerLocaleData(localeEs, 'es')
 @NgModule({
   declarations: [AppComponent],

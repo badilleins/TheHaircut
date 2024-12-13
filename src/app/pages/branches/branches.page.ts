@@ -38,7 +38,7 @@ export class BranchesPage {
   }
 
   async getBranchs() {
-    let path = `users/${this.user().uid}/branchs`;
+    let path = `branchs`;
     this.loading = true;
 
     let query = [
@@ -82,7 +82,7 @@ export class BranchesPage {
   }
 
   async deleteBranch(branch: Branch) {
-    let path = `users/${this.user().uid}/branchs/${branch.id}`;
+    let path = `branchs/${branch.id}`;
 
     const loading = await this.utilsSrv.loading();
     await loading.present();

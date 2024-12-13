@@ -3,10 +3,11 @@ import { Appointment } from '../models/appointment.model';
 import { UtilsService } from '../services/utils.service';
 import { FirebaseService } from '../services/firebase.service';
 import { User } from '../models/user.model';
-import { orderBy } from 'firebase/firestore';
-import { AddUpdateAppointmentComponent } from '../shared/components/add-update-appointment/add-update-appointment.component';
 import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
+import { AddUpdateAppointmentClientComponent } from '../shared/components/add-update-appointment-client/add-update-appointment-client.component';
+import { orderBy, where } from 'firebase/firestore';
+import { Notification } from '../models/notification.model';
 
 registerLocaleData(localeEs)
 
@@ -43,16 +44,14 @@ export class Tab1Page implements OnInit {
     }, 1000);
   }
 
-  getProfits() {
-    return this.appointments.reduce((index, appointment) => index + appointment.price, 0);
-  }
 
   getAppointments() {
-    let path = `users/${this.user().uid}/appointments`;
+    let path = `appointments`;
     this.loading = true;
 
     let query = [
-      orderBy('date', 'desc'),
+      where('client.uid', '==', this.user().uid),
+      orderBy('date', 'desc')
     ]
 
     let sub = this.firebaseSrv.getCollectionData(path,query).subscribe({
@@ -65,28 +64,16 @@ export class Tab1Page implements OnInit {
           };
         });
         this.loading = false;
-        sub.unsubscribe();
       }
     })
   }
 
   async addUpdateAppointment()
   {
-    let appointment:Appointment = {
-      id: null,
-      name: this.user().name,
-      lastName: this.user().lastName,
-      date: null,
-      endDate: null,
-      status: 0,
-      securityCode: null,
-      price: 7
 
-    }
     let success = await this.utilsSrv.presentModal({
-      component: AddUpdateAppointmentComponent,
-      cssClass: 'add-update-modal',
-      componentProps: { appointment }
+      component: AddUpdateAppointmentClientComponent,
+      cssClass: 'add-update-modal'
     })
     if (success) this.getAppointments();
   }
@@ -110,15 +97,14 @@ export class Tab1Page implements OnInit {
   }
 
   async deleteAppointment(appointment: Appointment) {
-    let path = `users/${this.user().uid}/appointments/${appointment.id}`;
+    let path = `appointments/${appointment.id}`;
 
     const loading = await this.utilsSrv.loading();
     await loading.present();
 
     try {
       await this.firebaseSrv.deleteDocument(path);
-      let pathImage = await this.firebaseSrv.getFilePath(appointment.name)
-      await this.firebaseSrv.deleteFile(pathImage)
+      await this.createNotificationDeleteAppointment(appointment)
       this.utilsSrv.showToast({
         message: 'Cita eliminada exitosamente',
         duration: 1500,
@@ -126,7 +112,6 @@ export class Tab1Page implements OnInit {
         position: 'middle',
         icon: 'checkmark-circle-outline',
       });
-
       this.getAppointments(); 
     } catch (error) {
       console.log(error);
@@ -141,6 +126,37 @@ export class Tab1Page implements OnInit {
     } finally {
       loading.dismiss();
     }
+  }
+
+  async createNotificationDeleteAppointment(appointment: Appointment) {
+      let path = `users/${appointment.barber.uid}/notifications`
+  
+      const loading = await this.utilsSrv.loading();
+      await loading.present();
+  
+      const notification: Notification ={
+        message: `El cliente ${appointment.client.name} ${appointment.client.lastName} ha eliminado la cita programada para la fecha: ${appointment.date}`,
+        date: new Date(),
+        type: 0
+      }
+      this.firebaseSrv.addDocument(path, notification).then(async res => {
+        const docId = res.id;
+        await this.firebaseSrv.updateDocument(`${path}/${docId}`, { id: docId });
+        this.utilsSrv.dismissModal({ success: true });
+      }).catch(error => {
+        console.log(error);
+  
+        this.utilsSrv.showToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline'
+        })
+  
+      }).finally(() => {
+        loading.dismiss();
+      })
   }
 
   constructor() {}

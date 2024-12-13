@@ -1,6 +1,6 @@
 import { User } from 'src/app/models/user.model';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { CalendarEvent, CalendarView } from 'angular-calendar';
+import { CalendarEvent, CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
 import { subDays, addDays, startOfDay, addMinutes, subWeeks, subMonths, addWeeks, addMonths, startOfWeek, startOfMonth, endOfWeek } from 'date-fns';
 import { Subject, Subscription } from 'rxjs';
 import { format } from 'date-fns';
@@ -8,8 +8,10 @@ import { es } from 'date-fns/locale';
 import { Appointment } from 'src/app/models/appointment.model';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AddUpdateAppointmentComponent } from '../add-update-appointment/add-update-appointment.component';
-import { orderBy } from 'firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { AddUpdateAppointmentClientComponent } from '../add-update-appointment-client/add-update-appointment-client.component';
+import { Notification } from 'src/app/models/notification.model';
 
 @Component({
   selector: 'app-calendar',
@@ -25,10 +27,7 @@ export class CalendarComponent  implements OnInit, OnDestroy {
   loading: boolean = false
   appointments: Appointment[] = []
   appointmentsSub: Subscription | null = null;
-
-  user(): User {
-    return this.utilsSrv.getFromLocalStorage('user');
-  }
+  user: User;
 
   viewDate: Date = new Date();
   CalendarView = CalendarView;
@@ -39,30 +38,23 @@ export class CalendarComponent  implements OnInit, OnDestroy {
   // Definir refresh como Subject
   refresh: Subject<any> = new Subject();
 
-  hourStartsAt = this.user().hourStartAt;  
-  hourEndsAt = this.user().hourEndAt;
+  hourStartsAt
+  hourEndsAt
   daysInWeek = 3;
 
-  events: CalendarEvent[] = [
-    {
-      start: startOfDay(new Date()),
-      end: addDays(new Date(),0),
-      title: 'Cita agendada',
-      color: { primary: '#1e90ff', secondary: '#D1E8FF' },
-    },
-    {
-      start: addDays(new Date(), 0,),
-      end: addDays(new Date(), 2),
-      title: 'Cita para mañana',
-      color: { primary: '#e3bc08', secondary: '#FDF1BA' },
-    },
-  ];
+  events: CalendarEvent[] = [];
 
   closeOpenMonthViewDay() {}
 
   // Agregar handleEvent para manejar clics en eventos
   handleEvent(action: string, event: CalendarEvent): void {
-    console.log('Evento clicado:', action, event);
+    const appointmentEdit = this.appointments.find(
+      (appointment) => appointment.date.getTime() === event.start.getTime()
+    );
+    
+    if (appointmentEdit) {
+      this.addUpdateAppointment(null, appointmentEdit);
+    }
   }
 
   getTitle(): string {
@@ -81,37 +73,72 @@ export class CalendarComponent  implements OnInit, OnDestroy {
     return '';
   }
 
-  async addUpdateAppointment(date:any)
+  async addUpdateAppointment(date:any, appointmentEdit?: Appointment)
   {
-    console.log(date)
-    let appointment:Appointment = {
-      id: null,
-      name: this.user().name,
-      lastName: this.user().lastName,
-      date: date.date,
-      endDate: addMinutes(date.date, 60),
-      status: 0,
-      securityCode: 0,
-      price: 7
-
+    if(appointmentEdit){
+      if(!appointmentEdit.client){
+        console.log(appointmentEdit)
+        let success = await this.utilsSrv.presentModal({
+          component: AddUpdateAppointmentComponent,
+          cssClass: 'add-update-modal',
+          componentProps: { appointmentEdit }
+        })
+        if (success) 'Actualizado con exito';
+      }else{
+        let success = await this.utilsSrv.presentModal({
+          component: AddUpdateAppointmentClientComponent,
+          cssClass: 'add-update-modal',
+          componentProps: { appointmentEdit }
+        })
+        if (success) 'Actualizado con exito';
+      }
+    }else{
+      // Validar que no haya conflicto con otras citas
+      const conflict = this.appointments.some(
+        (appointment) =>
+          (appointment.date.getTime() == date.date.getTime()||
+          (appointment.date.getTime() > date.date.getTime() &&
+            appointment.date.getTime() < addMinutes(date.date, 59).getTime())||
+            appointment.endDate.getTime() > date.date.getTime() &&
+            appointment.endDate.getTime() < addMinutes(date.date, 59).getTime())
+      );
+      if (conflict) {
+        this.utilsSrv.showToast({
+          message:"La cita debe crearse una hora antes de otra cita ya agendada y no puede agendarse sobre otra cita",
+          duration: 2500,
+          color: 'warning',
+          position: 'middle',
+          icon: 'alert-circle-outline',
+        });
+        return;
+      }
+      let appointment:Appointment = {
+        id: null,
+        name: '',
+        lastName: '',
+        date: date.date,
+        barber: this.user,
+        endDate: addMinutes(date.date, 60),
+        status: 0,
+        securityCode: 0,
+  
+      }
+      let success = await this.utilsSrv.presentModal({
+        component: AddUpdateAppointmentComponent,
+        cssClass: 'add-update-modal',
+        componentProps: { appointment }
+      })
+      if (success) 'Creado con exito';
     }
-    let success = await this.utilsSrv.presentModal({
-      component: AddUpdateAppointmentComponent,
-      cssClass: 'add-update-modal',
-      componentProps: { appointment }
-    })
-    if (success) 'Actualizado con exito';
+    
   }
 
   getAppointments() {
-    let path = `users/${this.user().uid}/appointments`;
-    console.log(path);
+    let path = `appointments`;
     this.loading = true;
-
     let query = [
-      orderBy('date', 'asc'),
+      where('barber.uid', '==', this.user.uid),
     ]
-
     this.appointmentsSub = this.firebaseSrv.getCollectionData(path,query).subscribe({
       next: (res: any) => {
         this.appointments = res.map((appointment: any) => {
@@ -122,15 +149,21 @@ export class CalendarComponent  implements OnInit, OnDestroy {
           };
         });
         this.events = this.appointments.map((appointment: any) => {
+          let color: string = '#6d2c35'
+          let isDrag: boolean = true
+          if(appointment.status==1){
+            isDrag=false
+            color='#ffc409'
+          } 
           return {
+            id: appointment.id,
             start: appointment.date, 
             end: appointment.endDate,  
-            title: 'Cita agendada de: '+ appointment.date.getHours()+":"+appointment.date.getMinutes() + " a: " + appointment.endDate.getHours()+":"+appointment.endDate.getMinutes(), // Asegúrate de que tu objeto tenga un título
-            color: { primary: '#6B4F4F', secondary: '#E29A84', secondaryText: '#FFFFFF' },
-            draggable: true
+            title: 'Cita con: \n'+ appointment.name+"\n"+appointment.lastName,
+            color: { primary: color, secondary: color, secondaryText: '#FFFFFF' },
+            draggable: isDrag
           } as CalendarEvent;
         });
-        console.log(this.events)
         this.loading = false;
       }
     })
@@ -204,8 +237,12 @@ export class CalendarComponent  implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit() {
+    this.user= this.utilsSrv.getFromLocalStorage('user');
+    this.hourStartsAt = this.user.hourStartAt;  
+    this.hourEndsAt = this.user.hourEndAt;
     this.viewDate = new Date();
     this.getAppointments();
+    
   }
 
   ngOnDestroy() {
@@ -214,4 +251,109 @@ export class CalendarComponent  implements OnInit, OnDestroy {
     }
   }
 
+  confirmDragAppointment(event: any) {
+    this.utilsSrv.presentAlert({
+      header: 'Mover cita',
+      message: '¿Estás seguro de mover esta cita?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Mover',
+          handler: () => {
+                this.eventTimesChanged(event)
+          }
+        },
+      ],
+    });
+  }
+
+  eventTimesChanged({ event, newStart, newEnd, allDay }: CalendarEventTimesChangedEvent): void {
+    if (newStart < new Date()) {
+      this.utilsSrv.showToast({
+        message:"No se puede mover una cita a una fecha pasada",
+        duration: 2500,
+        color: 'warning',
+        position: 'middle',
+        icon: 'alert-circle-outline',
+      });
+      return;
+    }
+  
+    // Validar que no haya conflicto con otras citas
+    const conflict = this.appointments.some(
+      (appointment) =>
+        (appointment.date.getTime() == newStart.getTime()||
+         (appointment.date.getTime() > newStart.getTime() &&
+          appointment.date.getTime() < addMinutes(newStart, 59).getTime())||
+          appointment.endDate.getTime() > newStart.getTime() &&
+          appointment.endDate.getTime() < addMinutes(newStart, 59).getTime())&&
+        appointment.id !== event.id
+      
+    );
+    if (conflict) {
+      this.utilsSrv.showToast({
+        message:"La cita debe moverse a una hora antes de otra cita ya agendada y no puede agendarse sobre otra cita",
+        duration: 2500,
+        color: 'warning',
+        position: 'middle',
+        icon: 'alert-circle-outline',
+      });
+      return;
+    }  
+    
+    // Actualizar la cita con las nuevas fechas
+    const appointmentToUpdate = this.appointments.find((a) => a.id === event.id);
+    if (appointmentToUpdate) {
+      const notification: Notification ={
+        message: `El barbero ${appointmentToUpdate.barber.name} ${appointmentToUpdate.barber.lastName} ha movido la cita programada para la fecha: ${appointmentToUpdate.date} a la fecha: ${newStart}`,
+        date: new Date(),
+        type: 2
+      }
+      appointmentToUpdate.date = newStart;
+      appointmentToUpdate.endDate = newEnd;
+      appointmentToUpdate.status = 2
+      let path = `appointments/${appointmentToUpdate.id}`
+      let pathNotification= `users/${appointmentToUpdate.client.uid}/notifications`
+      try {
+        this.firebaseSrv.updateDocument(path, appointmentToUpdate);
+        this.firebaseSrv.addDocument(pathNotification, notification).then(async res => {
+          const docId = res.id;
+          await this.firebaseSrv.updateDocument(`${pathNotification}/${docId}`, { id: docId });
+          this.utilsSrv.dismissModal({ success: true });
+        }).catch(error => {
+          console.log(error);
+      
+          this.utilsSrv.showToast({
+            message: error.message,
+            duration: 2500,
+            color: 'primary',
+            position: 'middle',
+            icon: 'alert-circle-outline'
+          })
+      
+        })
+        this.getAppointments();
+        this.utilsSrv.showToast({
+          message: 'Cita movida exitosamente',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline',
+        });
+      } catch (error) {
+        this.utilsSrv.showToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline',
+        });
+      }
+      
+    }
+  }
 }

@@ -83,11 +83,13 @@
     </ion-card-content>
   </ion-card>
   <ion-button
+        icon="log-out-outline"
         type="submit"
         expand="block"
         mode="ios"
         class="submit"
-        color="danger">
+        color="danger"
+        (click)="logOut()">
         Cerrar sesión
   </ion-button>
 </ion-content>

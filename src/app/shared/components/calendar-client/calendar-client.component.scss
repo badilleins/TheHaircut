@@ -1,0 +1,17 @@
+.mwl-calendar-week-view .cal-day-column:nth-child(n+5) {
+    display: none;
+  }
+
+*{
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+}
+
+.cal-day-cell.cal-today{
+  background-color: #E29A84;
+}
+
+.cal-day-cell.cal-today {
+  background-color: #F3E1A9; /* Fondo para el día actual (un amarillo suave) */
+  border: 2px solid #E29A84; /* Borde personalizado para el día actual */
+}

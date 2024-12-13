@@ -69,8 +69,8 @@
       [dayEndHour]="hourEndsAt"
       locale="es"
       (eventClicked)="handleEvent('Clicked', $event.event)"
-      (hourSegmentClicked)="addUpdateAppointment($event
-      )"
+      (hourSegmentClicked)="addUpdateAppointment($event)"
+      (eventTimesChanged)="confirmDragAppointment($event)"
     ></mwl-calendar-week-view>
 
     <mwl-calendar-day-view
@@ -83,5 +83,6 @@
       [dayEndHour]="hourEndsAt"
       (eventClicked)="handleEvent('Clicked', $event.event)"
       (hourSegmentClicked)="addUpdateAppointment($event)"
+      (eventTimesChanged)="confirmDragAppointment($event)"
     ></mwl-calendar-day-view>
   </div>
