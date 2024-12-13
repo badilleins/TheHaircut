@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { addDays, addMinutes, addMonths, addWeeks, endOfWeek, format, startOfDay, startOfMonth, startOfWeek, subDays, subMonths, subWeeks } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -14,7 +14,7 @@ import { UtilsService } from 'src/app/services/utils.service';
   templateUrl: './calendar-client.component.html',
   styleUrls: ['./calendar-client.component.scss'],
 })
-export class CalendarClientComponent  implements OnInit {
+export class CalendarClientComponent  implements OnInit, OnChanges{
   @Input() barber: User
   @Output() dateSelected = new EventEmitter<Date>();
   utilsSrv = inject(UtilsService)
@@ -33,8 +33,8 @@ export class CalendarClientComponent  implements OnInit {
   // Definir refresh como Subject
   refresh: Subject<any> = new Subject();
 
-  hourStartsAt
-  hourEndsAt
+  hourStartsAt:number
+  hourEndsAt:number
   daysInWeek = 3;
 
   events: CalendarEvent[] = [];
@@ -165,6 +165,15 @@ export class CalendarClientComponent  implements OnInit {
   ngOnDestroy() {
     if (this.appointmentsSub) {
       this.appointmentsSub.unsubscribe();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['barber']) {
+      this.hourStartsAt = this.barber.hourStartAt;  
+      this.hourEndsAt = this.barber.hourEndAt;
+      this.viewDate = new Date();
+      this.getAppointments();
     }
   }
 

@@ -238,12 +238,13 @@ export class CalendarComponent  implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.user= this.utilsSrv.getFromLocalStorage('user');
-    this.hourStartsAt = this.user.hourStartAt;  
-    this.hourEndsAt = this.user.hourEndAt;
+    this.hourStartsAt = Number(this.user.hourStartAt);  
+    this.hourEndsAt = Number(this.user.hourEndAt);
     this.viewDate = new Date();
     this.getAppointments();
     
   }
+  
 
   ngOnDestroy() {
     if (this.appointmentsSub) {

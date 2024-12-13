@@ -56,7 +56,12 @@ export class AddUpdateBarberComponent  implements OnInit {
   submit()
   {
     if (this.form.valid) {
+      const startTime = this.convertTimeToDecimal(this.form.value.hourStartAt.toString());
+      const endTime = this.convertTimeToDecimal(this.form.value.hourEndAt.toString());
 
+      // Actualizar los valores transformados en el formulario
+      this.form.controls.hourStartAt.setValue(startTime);
+      this.form.controls.hourEndAt.setValue(endTime);
       if(this.user) this.updateUser();
       else this.createUser()
 
@@ -175,6 +180,11 @@ export class AddUpdateBarberComponent  implements OnInit {
           this.branchs = res
         }
       })
+    }
+
+    convertTimeToDecimal(time: string): number {
+      const [hours, minutes] = time.split(':').map(Number);
+      return hours + minutes / 60;
     }
 
 }
