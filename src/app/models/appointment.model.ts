@@ -10,4 +10,5 @@ export interface Appointment {
     securityCode: number,
     status: number,
     endDate: Date,
+    description?: string
 }

@@ -66,17 +66,17 @@
           class="ion-margin"
           type="submit"
           mode="ios"
-          *ngIf="appointmentEdit && appointmentEdit.status!==1">
+          *ngIf="appointmentEdit && (appointmentEdit.status!==1 && appointmentEdit.status!==3)">
           Finalizar Cita
           <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
         </ion-button>
         <ion-button 
           class="ion-margin"
           mode="ios"
-          *ngIf="appointmentEdit && appointmentEdit.status!==1"
+          *ngIf="appointmentEdit && (appointmentEdit.status!==1 && appointmentEdit.status!==3)"
           color="danger"
           (click)="confirmDeleteAppointment()">
-          Eliminar Cita
+          Cancelar Cita
           <ion-icon slot="end" name="trash"></ion-icon>
         </ion-button>  
       </form>

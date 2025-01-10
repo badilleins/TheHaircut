@@ -8,6 +8,8 @@ import { registerLocaleData } from '@angular/common';
 import { AddUpdateAppointmentClientComponent } from '../shared/components/add-update-appointment-client/add-update-appointment-client.component';
 import { orderBy, where } from 'firebase/firestore';
 import { Notification } from '../models/notification.model';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 registerLocaleData(localeEs)
 
@@ -133,9 +135,9 @@ export class Tab1Page implements OnInit {
   
       const loading = await this.utilsSrv.loading();
       await loading.present();
-  
+      const formattedDate = format(appointment.date, "EEEE, d 'de' MMMM 'del' yyyy", { locale: es });
       const notification: Notification ={
-        message: `El cliente ${appointment.client.name} ${appointment.client.lastName} ha eliminado la cita programada para la fecha: ${appointment.date}`,
+        message: `El cliente ${appointment.client.name} ${appointment.client.lastName} ha eliminado la cita programada para la fecha: ${formattedDate}`,
         date: new Date(),
         type: 0
       }

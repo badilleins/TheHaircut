@@ -37,7 +37,10 @@ export class Tab4Page implements OnInit{
   
       this.firebaseSrv.getCollectionData(path,query).subscribe({
         next: (res: any) => {
-          this.notifications = res
+          this.notifications = res.map((notification: any) => ({
+            ...notification,
+            date: notification.date.toDate() // Convierte Timestamp a Date
+          }));
           this.loading = false;
         }
       })
