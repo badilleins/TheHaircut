@@ -155,6 +155,10 @@ export class CalendarComponent  implements OnInit, OnDestroy {
             isDrag=false
             color='#ffc409'
           } 
+          if(appointment.status==3){
+            isDrag=false
+            color='#cb1a27'
+          }
           return {
             id: appointment.id,
             start: appointment.date, 
@@ -309,8 +313,10 @@ export class CalendarComponent  implements OnInit, OnDestroy {
     // Actualizar la cita con las nuevas fechas
     const appointmentToUpdate = this.appointments.find((a) => a.id === event.id);
     if (appointmentToUpdate) {
+      const formattedDate = format(appointmentToUpdate.date, "EEEE, d 'de' MMMM 'del' yyyy", { locale: es });
+      const formattedDateEnd = format(newStart, "EEEE, d 'de' MMMM 'del' yyyy", { locale: es });
       const notification: Notification ={
-        message: `El barbero ${appointmentToUpdate.barber.name} ${appointmentToUpdate.barber.lastName} ha movido la cita programada para la fecha: ${appointmentToUpdate.date} a la fecha: ${newStart}`,
+        message: `El barbero ${appointmentToUpdate.barber.name} ${appointmentToUpdate.barber.lastName} ha movido la cita programada para la fecha: ${formattedDate} a la fecha: ${formattedDateEnd}`,
         date: new Date(),
         type: 2
       }

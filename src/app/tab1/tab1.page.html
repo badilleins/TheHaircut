@@ -31,13 +31,19 @@
             <ion-chip color="warning" mode="ios" outline="true" *ngIf="p.status===1">
               <ion-label>Estado: Finalizado</ion-label>
             </ion-chip>
-            <ion-chip color="danger" mode="ios" outline="true" *ngIf="p.status===2">
+            <ion-chip color="warning" mode="ios" outline="true" *ngIf="p.status===2">
               <ion-label>Estado: Movida - Pendiente</ion-label>
             </ion-chip>
+            <ion-chip color="danger" mode="ios" outline="true" *ngIf="p.status===3">
+              <ion-label>Cancelada</ion-label>
+            </ion-chip>
+            <div class="data" *ngIf="p.status===3 && p.description">
+              <strong>Motivo de cancelación: {{p.description}}</strong><br>
+            </div>
           </ion-label>
         </ion-item>
   
-        <ion-item-options *ngIf="p.status !== 1">
+        <ion-item-options *ngIf="p.status !== 1 && p.status !== 3">
           <ion-item-option (click)="confirmDeleteAppointment(p)" color="danger">
             <ion-icon class="option-btn" name="trash-outline"></ion-icon>
           </ion-item-option>

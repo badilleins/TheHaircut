@@ -19,19 +19,23 @@
           <ion-label>
             <div *ngIf="notification.type===0">
               <ion-icon color="danger" slot="start" name="trash" size="large"></ion-icon>
-              <ion-label>{{notification.message}}</ion-label>
+              <ion-label>Mensaje: {{notification.message}}</ion-label>
+              <ion-label>Fecha: {{ notification.date | date:'EEEE, d \'de\' MMMM \'del\' y' }}</ion-label>
             </div>
             <div *ngIf="notification.type===1">
               <ion-icon color="warning" slot="start" name="thumbs-up" size="large"></ion-icon>
               <ion-label>{{notification.message}}</ion-label>
+              <ion-label>Fecha: {{ notification.date | date:'EEEE, d \'de\' MMMM \'del\' y' }}</ion-label>
             </div>
             <div *ngIf="notification.type===2">
               <ion-icon color="success" slot="start" name="thumbs-up" size="large"></ion-icon>
               <ion-label>{{notification.message}}</ion-label>
+              <ion-label>Fecha: {{ notification.date | date:'EEEE, d \'de\' MMMM \'del\' y' }}</ion-label>
             </div>
             <div *ngIf="notification.type===3">
               <ion-icon color="success" slot="start" name="checkmark-circle-outline" size="large"></ion-icon>
               <ion-label>{{notification.message}}</ion-label>
+              <ion-label>Fecha: {{ notification.date | date:'EEEE, d \'de\' MMMM \'del\' y' }}</ion-label>
             </div>
           </ion-label>
         </ion-item>

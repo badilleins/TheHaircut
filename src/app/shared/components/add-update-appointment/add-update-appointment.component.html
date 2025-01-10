@@ -41,6 +41,9 @@
       <ion-item>
         <ion-label>Fecha: {{this.form.controls.date.value}}</ion-label>
       </ion-item>
+      <ion-item *ngIf="appointmentEdit && appointmentEdit.status===3">
+        <ion-label>Motivo de cancelación: {{this.form.controls.description.value}}</ion-label>
+      </ion-item>
       <!-- Botón para registrar o actualizar -->
       <ion-button 
         class="ion-margin"
@@ -56,7 +59,7 @@
         type="submit"
         mode="ios"
         [disabled]="form.invalid"
-        *ngIf="appointmentEdit && appointmentEdit.status!==1">
+        *ngIf="appointmentEdit && (appointmentEdit.status !== 1 && appointmentEdit.status !== 3)">
         Actualizar Cita
         <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
       </ion-button> 
@@ -65,7 +68,7 @@
         mode="ios"
         [disabled]="form.invalid"
         (click)="confirmFinishAppointment()"
-        *ngIf="appointmentEdit && appointmentEdit.status!==1"
+        *ngIf="appointmentEdit && (appointmentEdit.status !== 1 && appointmentEdit.status !== 3)"
         color="warning">
         Finalizar Cita
         <ion-icon slot="end" name="thumbs-up"></ion-icon>
@@ -75,9 +78,9 @@
         mode="ios"
         [disabled]="form.invalid"
         (click)="confirmDeleteAppointment()"
-        *ngIf="appointmentEdit && appointmentEdit.status!==1"
+        *ngIf="appointmentEdit && (appointmentEdit.status !== 1 && appointmentEdit.status !== 3)"
         color="danger">
-        Eliminar Cita
+        Cancelar Cita
         <ion-icon slot="end" name="trash"></ion-icon>
       </ion-button> 
     </form>

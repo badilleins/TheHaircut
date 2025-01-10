@@ -6,8 +6,9 @@ import { Branch } from 'src/app/models/branch.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { addMinutes } from 'date-fns';
+import { addMinutes, format } from 'date-fns';
 import { Notification } from 'src/app/models/notification.model';
+import { es } from 'date-fns/locale';
 
 @Component({
   selector: 'app-add-update-appointment-client',
@@ -34,6 +35,7 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
     endDate: new FormControl(null),
     status: new FormControl(0),
     securityCode: new FormControl(0, Validators.required),
+    description: new FormControl(''),
   })
 
   constructor() { }
@@ -51,7 +53,8 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
         date: this.appointmentEdit.date,
         endDate: this.appointmentEdit.endDate,
         status: this.appointmentEdit.status,
-        securityCode: this.appointmentEdit.securityCode
+        securityCode: this.appointmentEdit.securityCode,
+        description: this.appointmentEdit.description || null
       })
     }else{
       this.user = this.utilsSrv.getFromLocalStorage('user');
@@ -208,8 +211,15 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
 
     confirmDeleteAppointment() {
       this.utilsSrv.presentAlert({
-        header: 'Eliminar cita',
-        message: '¿Estás seguro de eliminar esta cita?',
+        header: 'Cancelar cita',
+        message: '¿Por qué deseas cancelar esta cita?',
+        inputs: [
+          {
+            name: 'reason',
+            type: 'textarea',
+            placeholder: 'Escribe el motivo de cancelación...',
+          },
+        ],
         buttons: [
           {
             text: 'Cancelar',
@@ -217,53 +227,72 @@ export class AddUpdateAppointmentClientComponent  implements OnInit {
             cssClass: 'secondary',
           },
           {
-            text: 'Eliminar',
-            handler: () => {
-                  this.deleteAppointment()
-            }
+            text: 'Cancelar Cita',
+            handler: (data) => {
+              if (data.reason && data.reason.trim().length > 0) {
+                this.deleteAppointment(data.reason);
+                return true;
+              } else {
+                this.utilsSrv.showToast({
+                  message: 'El motivo de cancelación es obligatorio.',
+                  duration: 2000,
+                  color: 'warning',
+                  position: 'middle',
+                  icon: 'alert-circle-outline',
+                });
+                return false; // Evitar cerrar la alerta si no hay motivo
+              }
+            },
           },
         ],
       });
     }
+    
   
-    async deleteAppointment() {
-      let path = `appointments/${this.appointmentEdit.id}`;
+    async deleteAppointment(reason: string) {
+      let path = `appointments/${this.appointmentEdit.id}`
   
       const loading = await this.utilsSrv.loading();
       await loading.present();
+      this.form.controls.description.setValue(reason);
+      this.form.controls.status.setValue(3)
+      await this.createNotificationDeleteAppointment();
+      this.firebaseSvc.updateDocument(path, this.form.value).then(async res => {
+        this.utilsSrv.dismissModal({ success: true });
   
-      try {
-        await this.firebaseSvc.deleteDocument(path);
-        await this.createNotificationDeleteAppointment();
         this.utilsSrv.showToast({
-          message: 'Cita eliminada exitosamente',
+          message: 'Cita cancelada exitosamente',
           duration: 1500,
           color: 'success',
           position: 'middle',
-          icon: 'checkmark-circle-outline',
-        });
-        this.utilsSrv.dismissModal({ success: true });
-      } catch (error) {
+          icon: 'checkmark-circle-outline'
+        })
+  
+      }).catch(error => {
+        console.log(error);
+  
         this.utilsSrv.showToast({
-          message:"Ha ocurrido un error",
+          message: error.message,
           duration: 2500,
           color: 'primary',
           position: 'middle',
-          icon: 'alert-circle-outline',
-        });
-      } finally {
+          icon: 'alert-circle-outline'
+        })
+  
+      }).finally(() => {
         loading.dismiss();
-      }
+      })
     }
+
 
   async createNotificationDeleteAppointment() {
     let path = `users/${this.appointmentEdit.client.uid}/notifications`
 
     const loading = await this.utilsSrv.loading();
     await loading.present();
-
+    const formattedDate = format(this.appointmentEdit.date, "EEEE, d 'de' MMMM 'del' yyyy", { locale: es });
     const notification: Notification ={
-      message: `El barbero ${this.appointmentEdit.barber.name} ${this.appointmentEdit.barber.lastName} ha eliminado la cita programada para la fecha: ${this.appointmentEdit.date}`,
+      message: `El barbero ${this.appointmentEdit.barber.name} ${this.appointmentEdit.barber.lastName} ha cancelado la cita programada para la fecha: ${formattedDate} \n Motivo: ${this.form.controls.description.value}`,
       date: new Date(),
       type: 0
     }
@@ -292,9 +321,9 @@ async createNotificationCreateAppointment(barber: User) {
 
   const loading = await this.utilsSrv.loading();
   await loading.present();
-
+  const formattedDate = format(this.form.controls.date.value, "EEEE, d 'de' MMMM 'del' yyyy", { locale: es });
   const notification: Notification ={
-    message: `El cliente ${this.user.name} ${this.user.lastName} ha agendado una cita para la fecha: ${this.form.controls.date.value}`,
+    message: `El cliente ${this.user.name} ${this.user.lastName} ha agendado una cita para la fecha: ${formattedDate}`,
     date: new Date(),
     type: 3
   }
@@ -323,9 +352,9 @@ async createNotificationFinishAppointment() {
 
   const loading = await this.utilsSrv.loading();
   await loading.present();
-
+  const formattedDate = format(this.appointmentEdit.date, "EEEE, d 'de' MMMM 'del' yyyy", { locale: es });
   const notification: Notification ={
-    message: `El barbero ${this.appointmentEdit.barber.name} ${this.appointmentEdit.barber.lastName} ha finalizado la cita programada para la fecha: ${this.appointmentEdit.date}`,
+    message: `El barbero ${this.appointmentEdit.barber.name} ${this.appointmentEdit.barber.lastName} ha finalizado la cita programada para la fecha: ${formattedDate}`,
     date: new Date(),
     type: 1
   }

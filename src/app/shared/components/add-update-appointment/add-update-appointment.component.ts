@@ -30,6 +30,7 @@ export class AddUpdateAppointmentComponent  implements OnInit {
     endDate: new FormControl(null),
     status: new FormControl(null),
     securityCode: new FormControl(null, Validators.required),
+    description: new FormControl(''),
   })
 
   constructor() { }
@@ -48,7 +49,8 @@ export class AddUpdateAppointmentComponent  implements OnInit {
         date: this.appointmentEdit.date,
         endDate: this.appointmentEdit.endDate,
         status: this.appointmentEdit.status,
-        securityCode: this.appointmentEdit.securityCode
+        securityCode: this.appointmentEdit.securityCode,
+        description: this.appointmentEdit.description || null
       })
     }
     if (this.appointment){
@@ -150,8 +152,15 @@ export class AddUpdateAppointmentComponent  implements OnInit {
 
     confirmDeleteAppointment() {
       this.utilsSrv.presentAlert({
-        header: 'Eliminar cita',
-        message: '¿Estás seguro de eliminar esta cita?',
+        header: 'Cancelar cita',
+        message: '¿Por qué deseas cancelar esta cita?',
+        inputs: [
+          {
+            name: 'reason',
+            type: 'textarea',
+            placeholder: 'Escribe el motivo de cancelación...',
+          },
+        ],
         buttons: [
           {
             text: 'Cancelar',
@@ -159,42 +168,61 @@ export class AddUpdateAppointmentComponent  implements OnInit {
             cssClass: 'secondary',
           },
           {
-            text: 'Eliminar',
-            handler: () => {
-                  this.deleteAppointment()
-            }
+            text: 'Cancelar Cita',
+            handler: (data) => {
+              if (data.reason && data.reason.trim().length > 0) {
+                this.deleteAppointment(data.reason);
+                return true;
+              } else {
+                this.utilsSrv.showToast({
+                  message: 'El motivo de cancelación es obligatorio.',
+                  duration: 2000,
+                  color: 'warning',
+                  position: 'middle',
+                  icon: 'alert-circle-outline',
+                });
+                return false; // Evitar cerrar la alerta si no hay motivo
+              }
+            },
           },
         ],
       });
     }
+    
   
-    async deleteAppointment() {
-      let path = `appointments/${this.appointmentEdit.id}`;
+    async deleteAppointment(reason: string) {
+      let path = `appointments/${this.appointmentEdit.id}`
   
       const loading = await this.utilsSrv.loading();
       await loading.present();
+      this.form.controls.description.setValue(reason);
+      this.form.controls.status.setValue(3)
+      
+      this.firebaseSvc.updateDocument(path, this.form.value).then(async res => {
+        this.utilsSrv.dismissModal({ success: true });
   
-      try {
-        await this.firebaseSvc.deleteDocument(path);
         this.utilsSrv.showToast({
           message: 'Cita eliminada exitosamente',
           duration: 1500,
           color: 'success',
           position: 'middle',
-          icon: 'checkmark-circle-outline',
-        });
-        this.utilsSrv.dismissModal({ success: true });
-      } catch (error) {
+          icon: 'checkmark-circle-outline'
+        })
+  
+      }).catch(error => {
+        console.log(error);
+  
         this.utilsSrv.showToast({
-          message:"Ha ocurrido un error",
+          message: error.message,
           duration: 2500,
           color: 'primary',
           position: 'middle',
-          icon: 'alert-circle-outline',
-        });
-      } finally {
+          icon: 'alert-circle-outline'
+        })
+  
+      }).finally(() => {
         loading.dismiss();
-      }
+      })
     }
 
     confirmFinishAppointment() {
