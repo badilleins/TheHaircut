@@ -60,6 +60,10 @@ export class UtilsService {
     return item ? JSON.parse(item) : null
   }
 
+  routerLinkNoBack(url:string){
+    this.router.navigateByUrl(url, {replaceUrl:true})
+  }
+
   async takePicture(promptLabelHeader:string)
   {
     return await Camera.getPhoto({

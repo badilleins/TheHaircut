@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Appointment } from 'src/app/models/appointment.model';
+import { Notification } from 'src/app/models/notification.model';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -13,35 +14,64 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class AddUpdateAppointmentComponent  implements OnInit {
   
   @Input() appointment:Appointment
+  @Input() appointmentEdit:Appointment
 
   utilsSrv = inject(UtilsService)
   firebaseSvc = inject(FirebaseService);
+
+  
 
   form = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('',[Validators.required, Validators.minLength(4)]),
     lastName: new FormControl('',[Validators.required, Validators.minLength(4)]),
+    barber: new FormControl(),
     date: new FormControl(null, Validators.required),
     endDate: new FormControl(null),
     status: new FormControl(null),
     securityCode: new FormControl(null, Validators.required),
-    price: new FormControl(7,[Validators.required, Validators.min(0)]),
+    description: new FormControl(''),
   })
-
-  user = {} as User;
 
   constructor() { }
 
+  user = {} as User
+
   ngOnInit() {
     this.user = this.utilsSrv.getFromLocalStorage('user');
-    if (this.appointment) this.form.setValue(this.appointment)
+    if (this.appointmentEdit){
+      console.log(this.appointmentEdit)
+      this.form.patchValue({
+        id: this.appointmentEdit.id,
+        name: this.appointmentEdit.name || null,
+        lastName: this.appointmentEdit.lastName || null,
+        barber: this.appointmentEdit.barber,
+        date: this.appointmentEdit.date,
+        endDate: this.appointmentEdit.endDate,
+        status: this.appointmentEdit.status,
+        securityCode: this.appointmentEdit.securityCode,
+        description: this.appointmentEdit.description || null
+      })
+    }
+    if (this.appointment){
+      this.form.patchValue({
+        id: this.appointment.id,
+        name: this.appointment.name || null,
+        lastName: this.appointment.lastName || null,
+        barber: this.appointment.barber,
+        date: this.appointment.date,
+        endDate: this.appointment.endDate,
+        status: this.appointment.status,
+        securityCode: this.appointment.securityCode
+      })
+    }
   }
 
   submit()
   {
     if (this.form.valid) {
 
-      if(this.appointment.id) this.updateAppointment();
+      if(this.appointmentEdit) this.updateAppointment();
       else this.createAppointment()
 
     }
@@ -49,15 +79,17 @@ export class AddUpdateAppointmentComponent  implements OnInit {
 
   // ======== Crear Producto =======
   async createAppointment() {
-    let path = `users/${this.user.uid}/appointments`
+    let path = `appointments`
 
     const loading = await this.utilsSrv.loading();
     await loading.present();
 
-    delete this.form.value.id
+    
+    this.form.controls.barber.setValue(this.user)
 
     this.firebaseSvc.addDocument(path, this.form.value).then(async res => {
-
+      const docId = res.id; // ID generado por Firebase
+      await this.firebaseSvc.updateDocument(`${path}/${docId}`, { id: docId });
       this.utilsSrv.dismissModal({ success: true });
 
       this.utilsSrv.showToast({
@@ -85,7 +117,7 @@ export class AddUpdateAppointmentComponent  implements OnInit {
 }
 
     private async updateAppointment() {
-      let path = `users/${this.user.uid}/appointments/${this.appointment.id}`;
+      let path = `appointments/${this.appointmentEdit.id}`;
   
       const loading = await this.utilsSrv.loading();
       await loading.present();
@@ -118,4 +150,133 @@ export class AddUpdateAppointmentComponent  implements OnInit {
       }
     }
 
+    confirmDeleteAppointment() {
+      this.utilsSrv.presentAlert({
+        header: 'Cancelar cita',
+        message: '¿Por qué deseas cancelar esta cita?',
+        inputs: [
+          {
+            name: 'reason',
+            type: 'textarea',
+            placeholder: 'Escribe el motivo de cancelación...',
+          },
+        ],
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'secondary',
+          },
+          {
+            text: 'Cancelar Cita',
+            handler: (data) => {
+              if (data.reason && data.reason.trim().length > 0) {
+                this.deleteAppointment(data.reason);
+                return true;
+              } else {
+                this.utilsSrv.showToast({
+                  message: 'El motivo de cancelación es obligatorio.',
+                  duration: 2000,
+                  color: 'warning',
+                  position: 'middle',
+                  icon: 'alert-circle-outline',
+                });
+                return false; // Evitar cerrar la alerta si no hay motivo
+              }
+            },
+          },
+        ],
+      });
+    }
+    
+  
+    async deleteAppointment(reason: string) {
+      let path = `appointments/${this.appointmentEdit.id}`
+  
+      const loading = await this.utilsSrv.loading();
+      await loading.present();
+      this.form.controls.description.setValue(reason);
+      this.form.controls.status.setValue(3)
+      
+      this.firebaseSvc.updateDocument(path, this.form.value).then(async res => {
+        this.utilsSrv.dismissModal({ success: true });
+  
+        this.utilsSrv.showToast({
+          message: 'Cita eliminada exitosamente',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline'
+        })
+  
+      }).catch(error => {
+        console.log(error);
+  
+        this.utilsSrv.showToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline'
+        })
+  
+      }).finally(() => {
+        loading.dismiss();
+      })
+    }
+
+    confirmFinishAppointment() {
+      this.utilsSrv.presentAlert({
+        header: 'Terminar',
+        message: '¿Estás seguro de terminar esta cita?',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'secondary',
+          },
+          {
+            text: 'Eliminar',
+            handler: () => {
+                  this.finishAppointment()
+            }
+          },
+        ],
+      });
+    }
+
+    async finishAppointment() {
+      let path = `appointments/${this.appointmentEdit.id}`
+  
+      const loading = await this.utilsSrv.loading();
+      await loading.present();
+  
+      
+      this.form.controls.status.setValue(1)
+      this.firebaseSvc.updateDocument(path, this.form.value).then(async res => {
+        this.utilsSrv.dismissModal({ success: true });
+  
+        this.utilsSrv.showToast({
+          message: 'Cita terminada exitosamente',
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'checkmark-circle-outline'
+        })
+  
+      }).catch(error => {
+        console.log(error);
+  
+        this.utilsSrv.showToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline'
+        })
+  
+      }).finally(() => {
+        loading.dismiss();
+      })
+    }
 }

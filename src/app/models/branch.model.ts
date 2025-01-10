@@ -3,4 +3,6 @@ export interface Branch {
     name: string,
     address: string,
     image: string
-}
+    hourStart: number,
+    hourEnd:number
+  }

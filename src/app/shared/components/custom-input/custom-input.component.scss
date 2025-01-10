@@ -15,3 +15,81 @@ input {
         outline: none; // Sin borde por defecto del navegador
     }
 }
+
+
+ion-datetime {
+  --background: rgb(227, 218, 201); /* Basado en --ion-color-secondary */
+  --background-rgb: 227, 218, 201;
+  --wheel-highlight-background: rgb(162, 214, 194); /* Basado en --ion-color-tertiary */
+  --wheel-highlight-border-radius: 48px;
+  --wheel-fade-background-rgb: 227, 218, 201; /* Basado en --ion-color-secondary */
+}
+
+ion-datetime::part(wheel-item) {
+  color: var(--ion-color-tertiary-contrast); /* #A2D6C2 */
+}
+
+ion-datetime::part(wheel-item active) {
+  color: var(--ion-color-secondary); /* #E3DAC9 */
+}
+
+time-modal{
+  margin: auto auto;
+}
+
+ion-modal {
+  --width: auto; /* Ajusta al contenido */
+  --height: auto; /* Ajusta al contenido */
+  --max-width: 350px; /* Establece un tamaño máximo */
+  --border-radius: 16px; /* Bordes redondeados para estilo */
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Opcional, para darle profundidad */
+  text-align: center;
+}
+
+.leaflet-container{
+  height: 400px;
+  width: 300px;
+}
+
+.modal-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  max-width: 350px;
+  background: var(--ion-background-color, #ffffff); /* Color de fondo del modal */
+  border-radius: 16px;
+
+}
+
+
+#map {
+  height: 400px; /* Asegura que el mapa tome toda la altura disponible */
+  width: 100%; /* Asegura que el mapa tome todo el ancho disponible */
+  position: relative; /* Evita que se salga del contenedor */
+  margin: 10px 0 ;
+}
+
+.modal-container {
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+}
+
+.leaflet-container_buttons{
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-container p {
+  margin: 0;
+}
+
+
+.custom-ionic-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

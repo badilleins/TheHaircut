@@ -1,0 +1,83 @@
+<div class="calendar-container">
+  <!-- Botones para cambiar entre vistas -->
+  <div style="text-align: center; margin-bottom: 10px;">
+    <ion-row>
+      <ion-col>
+        <ion-button 
+          (click)="setView(CalendarView.Day)" 
+          [disabled]="view === CalendarView.Day" 
+          mode="ios">
+          Día
+        </ion-button>
+        <ion-button 
+          (click)="setView(CalendarView.Week)" 
+          [disabled]="view === CalendarView.Week" 
+          mode="ios">
+          Semana
+        </ion-button>
+        <ion-button 
+          (click)="setView(CalendarView.Month)" 
+          [disabled]="view === CalendarView.Month" 
+          mode="ios">
+          Mes
+        </ion-button>    
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col size="6" style="text-align: left;">
+        <ion-button 
+          (click)="prev()" 
+          mode="ios">
+          {{ prevDate }}
+        </ion-button>
+      </ion-col>
+      <ion-col size="6" style="text-align: right;">
+        <ion-button 
+          (click)="next()" 
+          mode="ios">
+          {{ nextDate }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row>
+      <ion-col>
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'Es' }}</h3>
+      </ion-col>
+    </ion-row>
+  </div>
+  
+  <!-- Calendario con la vista dinámica -->
+  <mwl-calendar-month-view
+    *ngIf="view === CalendarView.Month"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    locale="es"
+    (dayClicked)="daySelected($event.day)"
+  ></mwl-calendar-month-view>
+
+  <mwl-calendar-week-view
+    *ngIf="view === CalendarView.Week"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [hourSegments]="2"
+    [dayStartHour]="hourStartsAt"
+    [dayEndHour]="hourEndsAt"
+    locale="es"
+    (hourSegmentClicked)="addEvent($event)"
+  ></mwl-calendar-week-view>
+
+  <mwl-calendar-day-view
+    *ngIf="view === CalendarView.Day"
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    [hourSegments]="2"
+    [dayStartHour]="hourStartsAt"
+    [dayEndHour]="hourEndsAt"
+    (hourSegmentClicked)="addEvent($event)"
+  ></mwl-calendar-day-view>
+</div>

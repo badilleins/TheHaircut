@@ -1,6 +1,47 @@
 <app-header title="Estadisticas"></app-header>
 
 <ion-content [fullscreen]="true">
-  <app-bar-chart></app-bar-chart>
-  <app-bar-chart></app-bar-chart>
+  <ion-grid fixed="true">
+    <!-- Primera fila -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-card class="first-row-card">
+          <ion-card-header>
+            <ion-card-subtitle></ion-card-subtitle>
+            <ion-card-title>Número de barberos</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <h1>{{this.users.length}}</h1>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <!-- Segunda fila -->
+    <ion-row>
+      <ion-col size-md="12" size-lg="12" size="12">
+        <ion-segment [(ngModel)]="selectedSegment">
+
+          <ion-segment-button value="citas">
+            <ion-label>Número de Citas</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="cortes">
+            <ion-label>Número de Cortes</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+      </ion-row>
+
+      <ion-row>
+
+      </ion-row>
+      <ion-col>
+        <ng-container *ngIf="selectedSegment ==='citas'">
+          <app-bar-chart></app-bar-chart>
+        </ng-container>
+        <ng-container *ngIf="selectedSegment === 'cortes'">
+          <app-donought-chart></app-donought-chart>
+        </ng-container>
+      </ion-col>
+    </ion-grid>
 </ion-content>

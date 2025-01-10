@@ -19,6 +19,12 @@ import { AddUpdateHaircutComponent } from './components/add-update-haircut/add-u
 import { AddUpdateProductComponent } from './components/add-update-product/add-update-product.component';
 import { BarChartComponent } from './components/bar-chart/bar-chart.component';
 import { BaseChartDirective } from 'ng2-charts';
+import { AddUpdateHaircutCategoryComponent } from './components/add-update-haircut-category/add-update-haircut-category.component';
+import { AddUpdateProductCategoryComponent } from './components/add-update-product-category/add-update-product-category.component';
+import { DonoughtChartComponent } from './components/donought-chart/donought-chart.component';
+import { MapComponent } from './components/map/map.component';
+import { AddUpdateAppointmentClientComponent } from './components/add-update-appointment-client/add-update-appointment-client.component';
+import { CalendarClientComponent } from './components/calendar-client/calendar-client.component';
 
 registerLocaleData(localeEs)
 
@@ -36,7 +42,13 @@ registerLocaleData(localeEs)
     ProductsComponent,
     AddUpdateHaircutComponent,
     AddUpdateProductComponent,
-    BarChartComponent
+    BarChartComponent,
+    MapComponent,
+    AddUpdateHaircutCategoryComponent,
+    AddUpdateProductCategoryComponent,
+    DonoughtChartComponent,
+    AddUpdateAppointmentClientComponent,
+    CalendarClientComponent
   ],
   imports: [
     CommonModule,
@@ -48,6 +60,7 @@ registerLocaleData(localeEs)
       useFactory: adapterFactory,
     }),
     BaseChartDirective
+
   ],
   exports: [
     HeaderComponent,
@@ -57,7 +70,10 @@ registerLocaleData(localeEs)
     CalendarComponent,
     HaircutGalleryComponent,
     ProductsComponent,
-    BarChartComponent
+    BarChartComponent,
+    AddUpdateProductCategoryComponent,
+    DonoughtChartComponent,
+    MapComponent
   ]
 })
 export class SharedModule { }
